@@ -1,8 +1,8 @@
-const Track_pos = () => {
+const Bpm = () => {
     return (
-        <div style={{ position: "relative", width: "150px" }}>
+        <div style={{ position: "relative", width: "110px" }}>
             <img
-                src="Footer/track-pos.png"
+                src="Footer/bpm.png"
                 alt="Track Position"
                 style={{ display: "block", width: "100%" }}
             />
@@ -10,16 +10,16 @@ const Track_pos = () => {
                 style={{
                     position: "absolute",
                     top: "50%",
-                    left: "75px",
+                    left: "35px",
                     transform: "translateY(-50%)",
                     
                     fontSize: "15px"
                 }}
             >
-                0.   0.   0.   0.
+                132.000
             </div>
         </div>
     );
 };
 
-export default Track_pos;
+export default Bpm;

@@ -1,21 +1,6 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-        sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    overflow: hidden;
-}
-
-code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
-}
 /* General Styles */
 html, body {
+    font-family: Roboto !important;
     height: 100%;
     margin: 0;
     padding: 0;
@@ -37,6 +22,7 @@ header {
     flex-wrap: wrap;
     gap: 20px;
     position: relative;
+    
 }
 
     header #search {
@@ -52,24 +38,25 @@ header {
 /* Flexbox Layout */
 /* Main Content */
 .upper-main {
+    padding: 20px;
     width: 100%;
     align-self: center;
     background-color: #a7d3d2;
     align-content: center;
     font-size: 30px;
     font-weight: bold;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
     padding-left: 100px;
     color: white;
     margin: 0px;
 }
 
 .outer-main {
-    /*padding: 20px;*/
+    padding: 20px;
     width: 100%;
-    /*background-color: #f5d930cc;*/
-    background-image: url(image/background.png);
+    /* background-color: #f5d930cc;*/
+    background-image: url(../image/background.png);
     align-self: center;
     align-content: center;
     display: flex;
@@ -82,9 +69,8 @@ header {
 .inner-main {
     height: 100%;
     width: 100%;
-    /*padding: 20px;*/
-    color: white;
-    background-color: black;
+    padding: 20px;
+    background-color: white;
     border: 50px;
     border-color: #fd8818;
     align-self: center;
@@ -187,16 +173,15 @@ header {
     }
 /* Footer Styles */
 footer {
-    background-color: #2f3135;
-    /*color: #292929;*/
-    color: white;
+    background-color: #a7d3d2;
+    color: #292929;
     text-align: center;
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: auto;
-    padding: 0px 20px;
+    padding: 10px 20px;
     flex: 1;
 }
 
@@ -382,13 +367,11 @@ form {
     flex-direction: column;
     gap: 10px;
 }
-
-.row {
+.row{
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
-
 .logo {
     display: flex;
     gap: 10px;
@@ -424,55 +407,4 @@ form {
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-/* New CSS */
-.track {
-    width: 380px;
-    height: 20px;
-    border-width: 0px;
-    gap: 10px;
-    border: 3px solid #737579;
-    border-top: 0px; /* del top border to match upper's bottom border */
-}
-.track-serial {
-    height: 20px;
-    background-color: #b1bbca;
-    border-width: 0px;
-    padding: 0px 5px;
-    gap: 10px;
-}
-.track-icon {
-    height: 15px;
-    width: 15px;
-}
-.mute-track {
-    height: 12px;
-    width: 23px;
-    font-weight: inherit;
-    background-color: #807d82;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    border-width: 0px;
-    border-right: 3px solid black;
-    border-bottom-left-radius: 5px;
-    border-top-left-radius: 5px;
-    color: white;
-    font-size: 10px;
-}
-.stop-track {
-    height: 12px;
-    width: 20px;
-    font-weight: inherit;
-    background-color: #807d82;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    border-width: 0px;
-    border-right: 3px solid black;
-    border-bottom-right-radius: 5px;
-    border-top-right-radius: 5px;
-    color: white;
-    font-size: 10px;
 }

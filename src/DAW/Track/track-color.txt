@@ -1,0 +1,6 @@
+red #807d82
+purple #b167ff
+orange #f5c848
+blue #41dfe2
+yellow #dff155
+gray #b1bbca

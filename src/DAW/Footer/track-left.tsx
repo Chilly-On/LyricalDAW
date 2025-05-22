@@ -1,8 +1,8 @@
-const Track_pos = () => {
+const Track_left = () => {
     return (
         <div style={{ position: "relative", width: "150px" }}>
             <img
-                src="Footer/track-pos.png"
+                src="Footer/track-left.png"
                 alt="Track Position"
                 style={{ display: "block", width: "100%" }}
             />
@@ -22,4 +22,4 @@ const Track_pos = () => {
     );
 };
 
-export default Track_pos;
+export default Track_left;

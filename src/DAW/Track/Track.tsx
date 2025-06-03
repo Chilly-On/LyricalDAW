@@ -1,21 +1,14 @@
-﻿const Track = () => {
-    /*return (
-        <div className="d-flex flex-column gap-2"
-            style={{
-                width: "300px",
-                height: "700px",         // pending auto
-                backgroundColor: "#2f3238", // green color
-                alignItems: "center",
-                borderWidth: "0px",
-                borderRadius: "20px",       // match shape
-                padding: "20px"
-            }}
-        >
-        </div>
-    );*/
+﻿import React from "react";
+import Track_gen from "./track-gen";
+
+const Track = () => {
     return (
         <div className="d-flex flex-row">
-            <div className="d-flex flex-column justify-content-between align-items-center">
+            <div className="d-flex flex-column justify-content-between align-items-center"
+                style={{
+                    fontSize: "15px"
+                }}
+            >
                 <div style={{
                     width: "400px",
                     height: "700px",         // pending auto
@@ -27,19 +20,20 @@
                     <div className="d-flex flex-row align-items-center justify-content-between"
                         style={{
                             width: "380px",
-                            height: "50px",
+                            height: "24px",
                             backgroundColor: "black",
                             padding: "10px",
-                            border: "5px solid #70767a",
-                            borderRadius: "10px"
+                            border: "3px solid #70767a",
+                            borderRadius: "10px",
+                            overflow: "hidden"
                         }}>
                         {/* Left part*/ }
                         <div className="d-flex flex-row"
                             style={{
-                                height: "30px",
+                                height: "20px",
                                 backgroundColor: "#898e8c", // match with parent color
                                 alignItems: "center",
-                                border: "3px solid #70767a",
+                                border: "1px solid #70767a",
                                 borderRadius: "10px"
                             }}>
                             <button
@@ -48,14 +42,16 @@
                                     display: "flex",
                                     alignItems: "inherit",
                                     justifyContent: "inherit",
-                                    border: "0px"
+                                    border: "0px",
+                                    borderTopLeftRadius: "10px",
+                                    borderBottomLeftRadius: "10px"
                                 }}
                             >
                                 <img
                                     src="Track/add-track.png"
                                     alt="Play Button"
                                     style={{
-                                        height: "20px", width: "20px"
+                                        height: "12px", width: "12px"
                                     }} // scales arrow within the square
                                 />
                             </button>
@@ -65,14 +61,16 @@
                                     display: "flex",
                                     alignItems: "inherit",
                                     justifyContent: "inherit",
-                                    border: "0px"
+                                    border: "0px",
+                                    borderTopRightRadius: "10px",
+                                    borderBottomRightRadius: "10px"
                                 }}
                             >
                                 <img
                                     src="Track/category.png"
                                     alt="Play Button"
                                     style={{
-                                        height: "20px", width: "20px"
+                                        height: "12px", width: "12px"
                                     }} // scales arrow within the square
                                 />
                             </button>
@@ -81,12 +79,12 @@
                         <div className="d-flex flex-row align-items-center">
                             <div className="d-flex flex-row"
                                 style={{
-                                    height: "30px",
+                                    height: "20px",
                                     alignItems: "center",
                                     justifyContent: "center",
                                     marginRight: "10px",
                                     gap: "0px", // ensure no spacing
-                                    border: "5px solid #70767a",
+                                    border: "3px solid #70767a",
                                     borderRadius: "10px"
                                 }}
                             >
@@ -114,8 +112,8 @@
                                         src="Track/house.png"
                                         alt="Play Button"
                                         style={{
-                                            height: "20px",
-                                            width: "20px"
+                                            height: "15px",
+                                            width: "15px"
                                         }} // scales arrow within the square
                                     />
                                 </button>
@@ -134,15 +132,15 @@
                                         src="Track/collapse.png"
                                         alt="Play Button"
                                         style={{
-                                            height: "15px"
+                                            height: "12px"
                                         }} // scales arrow within the square
                                     />
                                 </button>
                             </div>
                             <button
                                 style={{
-                                    height: "30px",
-                                    width: "40px",
+                                    height: "20px",
+                                    width: "30px",
                                     backgroundColor: "#898e8c",
                                     display: "flex",
                                     alignItems: "inherit",
@@ -165,49 +163,9 @@
                     {/* Track header, wait for dynamic
                     Width 50px normal, 60px if open file    
                     */}
-                    <div className="d-flex flex-column"
-                        style={{
-                            fontSize: "15px"
-                        } }
-                    >
+                    <div className="d-flex flex-column">
                         {/*  DON'T COPY HERE*/ }
-                        <div className="d-flex flex-row align-items-center track"
-                            style={{
-                                width: "380px",
-                                border: "3px solid #737579"
-                            }}
-                        >
-                            <div className="d-flex align-items-center justify-content-between track-serial"
-                                style={{
-                                    width: "50px",
-                                    backgroundColor: "#e6357a" // Change color track here
-                                }}
-                            >
-                                <img src="Track/file.png" alt="Timeline"        // Change track icon here
-                                    className="track-icon"
-                                />
-                                <div>
-                                    <div style={{
-                                        fontSize: "14px",
-                                        color: "black"
-                                    }}>
-                                           {/* Track id here*/}
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="d-flex flex-row fw-bold">
-                                <button className="mute-track">m</button>
-                                <button className="stop-track">s</button>
-                            </div>
-                            <div className="d-flex"
-                                style={{
-                                borderWidth: "0px",
-                                gap: "10px"
-                                }}>
-                                {/* Track name here*/}
-                                File closed
-                            </div>
-                        </div>
+                        <Track_gen color="#e6357a" icon="Track/file.png" name="File closed" borderTop={1} />
                         {/* File open*/}
                         <div className="d-flex flex-column align-items-center"
                             style={{
@@ -254,154 +212,14 @@
                                 }} />
                                 <div className="d-flex flex-column">
                                     {/*  One track in div*/}
-                                    <div className="d-flex flex-row align-items-center track"
-                                        style={{
-                                            width: "370px"            // del top border to match upper's bottom border
-                                        }}
-                                    >
-                                        <div className="d-flex align-items-end justify-content-between track-serial"
-                                            style={{
-                                                width: "50px",
-                                                backgroundColor: "#f5c848", // Change color track here
-                                            }}
-                                        >
-                                            <img src="Track/harmony.png" alt="Timeline"        // Change track icon here
-                                                className="track-icon"
-                                            />
-                                            <div>
-                                                <div style={{
-                                                    fontSize: "14px",
-                                                    color: "black"
-                                                }}>
-                                                1    {/* Track id here*/}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="d-flex flex-row fw-bold">
-                                            <button className="mute-track">m</button>
-                                            <button className="stop-track">s</button>
-                                        </div>
-                                        <div className="d-flex"
-                                            style={{
-                                                borderWidth: "0px",
-                                                gap: "10px"
-                                            }}>
-                                            {/* Track name here*/}
-                                            Harmony
-                                        </div>
-                                    </div>
-                                    <div className="d-flex flex-row align-items-center track"
-                                        style={{
-                                            width: "370px"  // del top border to match upper's bottom border
-                                        }}
-                                    >
-                                        <div className="d-flex align-items-end justify-content-between track-serial"
-                                            style={{
-                                                width: "50px",
-                                                backgroundColor: "#41dfe2" // Change color track here
-                                            }}
-                                        >
-                                            <img src="Track/mix.png" alt="Timeline"        // Change track icon here
-                                                className="track-icon"
-                                            />
-                                            <div>
-                                                <div style={{
-                                                    fontSize: "14px",
-                                                    color: "black"
-                                                }}>
-                                                    2    {/* Track id here*/}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="d-flex flex-row fw-bold">
-                                            <button className="mute-track">m</button>
-                                            <button className="stop-track">s</button>
-                                        </div>
-                                        <div className="d-flex"
-                                            style={{
-                                                borderWidth: "0px",
-                                                gap: "10px"
-                                            }}>
-                                            {/* Track name here*/}
-                                            Mixing
-                                        </div>
-                                    </div>
-                                    <div className="d-flex flex-row align-items-center track"
-                                        style={{
-                                            width: "370px"// del top border to match upper's bottom border
-                                        }}
-                                    >
-                                        <div className="d-flex align-items-end justify-content-between track-serial"
-                                            style={{
-                                                width: "50px",
-                                                backgroundColor: "#dff155" // Change color track here
-                                            }}
-                                        >
-                                            <img src="Track/piano.png" alt="Timeline"        // Change track icon here
-                                                className="track-icon"
-                                            />
-                                            <div>
-                                                <div style={{
-                                                    fontSize: "14px",
-                                                    color: "black"
-                                                }}>
-                                                    3    {/* Track id here*/}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="d-flex flex-row fw-bold">
-                                            <button className="mute-track">m</button>
-                                            <button className="stop-track">s</button>
-                                        </div>
-                                        <div className="d-flex"
-                                            style={{
-                                                borderWidth: "0px",
-                                                gap: "10px"
-                                            }}>
-                                            {/* Track name here*/}
-                                            Piano
-                                        </div>
-                                    </div>
-                                    <div className="d-flex flex-row align-items-center track"
-                                        style={{
-                                            width: "370px"  // del top border to match upper's bottom border
-                                        }}
-                                    >
-                                        <div className="d-flex align-items-end justify-content-between track-serial"
-                                            style={{
-                                                width: "50px",
-                                                backgroundColor: "#b1bbca", // Change color track here
-                                            }}
-                                        >
-                                            <img src="Track/sample.png" alt="Timeline"        // Change track icon here
-                                                className="track-icon"
-                                            />
-                                            <div>
-                                                <div style={{
-                                                    fontSize: "14px",
-                                                    color: "black"
-                                                }}>
-                                                    4    {/* Track id here*/}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="d-flex flex-row fw-bold">
-                                            <button className="mute-track">m</button>
-                                            <button className="stop-track">s</button>
-                                        </div>
-                                        <div className="d-flex"
-                                            style={{
-                                                borderWidth: "0px",
-                                                gap: "10px"
-                                            }}>
-                                            {/* Track name here*/}
-                                            Sample
-                                        </div>
-                                    </div>
+                                    <Track_gen width="370px" color="#f5c848" icon="Track/harmony.png" id={1} name="Harmony" />
+                                    <Track_gen width="370px" color="#41dfe2" icon="Track/mix.png" id={2} name="Mixing" />
+                                    <Track_gen width="370px" color="#dff155" icon="Track/piano.png" id={3} name="Piano" />
+                                    <Track_gen width="370px" color="#b1bbca" icon="Track/sample.png" id={4} name="Sample" />
                                 </div>
                             </div>
                         </div>
-                        
+                        <Track_gen color="#dff155" icon="Track/piano.png" id={5} name="Piano 2" />
 
                     </div>
                 </div>

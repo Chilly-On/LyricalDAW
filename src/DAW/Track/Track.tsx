@@ -1,4 +1,4 @@
-﻿import React from "react";
+import React from "react";
 import Track_gen from "./track-gen";
 
 const Track = () => {

@@ -244,8 +244,10 @@ const Track = () => {
             color: "#dff155"
         }
     ];
+    const scrollRef = useRef(null);
     const trackCount = useMemo(() => getTrackCount(fileTracks), [fileTracks]);
     const [trackHeight] = useState(20);
+    const totalHeight = trackCount * trackHeight;
 
     const containerRef = useRef<HTMLDivElement>(null);
     const [timeWidth, setTimeWidth] = useState(initialTimeWidth);
@@ -265,8 +267,7 @@ const Track = () => {
             style={{
                 border: "2.5px solid #f9f9fa",
                 borderRadius: "10px",
-                height: "100%",
-                width: "100%",
+                height: "100%"
             }}
         >
             {/*
@@ -292,7 +293,7 @@ const Track = () => {
                     borderTopLeftRadius: "10px",
                     borderBottomLeftRadius: "10px"
                 }}>
-                    {/* Track setting*/}
+                    {/* Track setting*/ }
                     <div className="d-flex flex-row align-items-center justify-content-between"
                         style={{
                             width: "395px",
@@ -303,7 +304,7 @@ const Track = () => {
                             borderBottom: "1px solid #70767a",
                             overflow: "hidden"
                         }}>
-                        {/* Left part*/}
+                        {/* Left part*/ }
                         <div className="d-flex flex-row"
                             style={{
                                 height: "20px",
@@ -451,12 +452,73 @@ const Track = () => {
             <div>
                 {/* Timeline grid*/}
                 {/* Consider redesign timeline so that it maintains weight during zooming in or out*/}
-                <Track_grid
-                    trackCount={trackCount}
-                    timeSteps={timeSteps}
-                    trackHeight={20}
-                    initialTimeWidth={30}
-                />
+                <div
+                    ref={containerRef}
+                    onWheel={handleWheel}
+                    style={{
+                        overflow: "auto",
+                        width: "830px",             // change to dynamic
+                        height: "100%",
+                        backgroundColor: "#2f3135",
+                        paddingTop: "5px",
+                        border: "1px solid #999",
+                        borderTopRightRadius: "10px",
+                        borderBottomRightRadius: "10px"
+                    }}
+                >
+                    {/* Timeline Header */}
+                    <div
+                        style={{
+                            display: "grid",
+                            gridTemplateColumns: `repeat(${timeSteps}, ${timeWidth}px)`,
+                            position: "sticky",
+                            height: "25px",
+                            top: 0,
+                            zIndex: 1,
+                            backgroundColor: "#1e1e1e",
+                            color: "#ccc",
+                            fontSize: "12px",
+                            borderBottom: "1px solid #737579",
+                        }}
+                    >
+                        {Array.from({ length: timeSteps }).map((_, i) => (
+                            <div
+                                key={`header-${i}`}
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "flex-start",
+                                    alignItems: "center",
+                                    height: "20px",
+                                    borderRight: "1px solid #737579",
+                                    paddingLeft: "2px"
+                                }}
+                            >
+                                {i + 1}
+                            </div>
+                        ))}
+                    </div>
+
+                    {/* Main Grid */}
+                    <div
+                        style={{
+                            display: "grid",
+                            gridTemplateRows: `repeat(${trackCount}, ${trackHeight}px)`,
+                            gridTemplateColumns: `repeat(${timeSteps}, ${timeWidth}px)`,
+                            borderLeft: "1px solid #737579",
+                        }}
+                    >
+                        {Array.from({ length: trackCount * timeSteps }).map((_, index) => (
+                            <div
+                                key={index}
+                                style={{
+                                    borderRight: "1px solid #737579",
+                                    borderBottom: "1px solid #737579",
+                                    backgroundColor: "#2f2f2f",
+                                }}
+                            />
+                        ))}
+                    </div>
+                </div>
 
 
             </div>

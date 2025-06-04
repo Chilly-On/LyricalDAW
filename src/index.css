@@ -22,7 +22,9 @@ html, body {
     display: flex;
     flex-direction: column;
 }
-
+body {
+    font-size: 15px !important;
+}
 /* Header Styles */
 header {
     background-color: white;

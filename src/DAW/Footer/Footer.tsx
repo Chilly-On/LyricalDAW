@@ -15,7 +15,11 @@ import Record from './record';
 const Footer = () => {
     // Bottom menu in blank (track-control)
     return (
-        <footer className="d-flex flex-row align-items-center text-center justify-content-between">
+        <footer className="d-flex flex-row align-items-center text-center justify-content-between"
+            style={{
+                height: "5vh"
+            } }
+        >
             <Track_left />
             <Track_right />
             <div

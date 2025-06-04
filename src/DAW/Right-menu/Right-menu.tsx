@@ -3,7 +3,7 @@
         <div className="d-flex flex-column gap-2"
             style={{
                 width: "300px",
-                height: "700px",         // pending auto
+                height: "100%",         // pending auto
                 backgroundColor: "#2f3238", // green color
                 alignItems: "center",
                 borderWidth: "0px",
@@ -147,7 +147,8 @@
                 <div>
                     Digital Scale
                 </div>
-                <div style={{ color:"#70767a" }} >                          { // change to dynamic later
+                <div style={{ color: "#70767a" }} >
+                    { // change to dynamic later
                 }
                     -18 dBFS
                 </div>
@@ -179,6 +180,7 @@
                     height: "100%"
                 }}
             >
+                {/* dynamic later */}
                 <div className="d-flex flex-column"
                     style={{
                         width: "50px",

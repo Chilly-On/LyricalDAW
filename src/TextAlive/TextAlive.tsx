@@ -25,66 +25,39 @@ player.addListener({
 
 /* Code mẫu khác
 // Get the character that will be spoken in 500ms
-
 let current = c || player.video.firstChar;
-
 while (current && current.startTime < position + 500) {
-
-// A new character is about to be spoken
-
-if (c !== current) {
-
-newChar(current);
-
-c = current;
-
-}
-
-current = current.next;
-
+    // A new character is about to be spoken
+    if (c !== current) {
+        newChar(current);
+        c = current;
+    }
+    current = current.next;
 }
 
 // Part-of-speech
-
 const classes = [];
-
 if (
-
-char.parent.pos == "N" ||
-
-char.parent.pos === "PN" ||
-
-char.parent.pos === "X"
-
+    char.parent.pos == "N" ||
+    char.parent.pos === "PN" ||
+    char.parent.pos === "X"
 ) classes.push("noun");
 
 // Is this the last character of a phrase?
 if (char.parent.parent.lastChar = char) classes.push("lastChar");
 
 // Get current beat information
-
 let beat = player.findBeat(position);
-
-if (b!== beat) {
-
-if (beat) {
-
-requestAnimationFrame(() {
-
-bar.className = "active";
-
-requestAnimationFrame(() {
-
-bar.className = "active beat";
-
-})
-
-})
-
-}
-
-b = beat;
-
+if (b !== beat) {
+    if (beat) {
+        requestAnimationFrame(() {
+            bar.className = "active";
+            requestAnimationFrame(() {
+                bar.className = "active beat";
+            })
+        })
+    }
+    b = beat;
 }
 
 

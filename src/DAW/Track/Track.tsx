@@ -1,9 +1,282 @@
 import React from "react";
+import { useMemo, useRef, useEffect, useState } from "react";
 import Track_gen from "./track-gen";
+import Track_grid from "./track-grid";
+
+const getTrackCount = (tracks) => {
+    let count = 0;
+    const traverse = (items) => {
+        for (const item of items) {
+            if (item.tracks && item.open) {
+                traverse(item.tracks);
+            } else {
+                count += 1;
+            }
+        }
+    };
+    traverse(tracks);
+    return count;
+};
+
 
 const Track = () => {
+    const timeSteps = 30;
+    const initialTimeWidth = 30;
+
+    const renderTrack = (track, level = 0) => (
+        <Track_gen
+            key={track.id}
+            id={track.id}
+            name={track.name}
+            color={track.color}
+            icon={track.icon}
+            borderTop={track.borderTop}
+            level={level}
+        >
+            {track.tracks?.map((subTrack) => renderTrack(subTrack, level + 1))}
+        </Track_gen>
+    );
+
+    const fileTracks = [
+        {
+            name: "File closed",
+            icon: "Track/file.png",
+            color: "#e6357a",
+            borderTop: 1
+        },
+        {
+            name: "File opened",
+            icon: "Track/file-open.png",
+            color: "#b167ff",
+            open: true,
+            tracks: [
+                {
+                    id: 1,
+                    name: "Harmony",
+                    color: "#f5c848",
+                    icon: "Track/harmony.png"
+                },
+                {
+                    id: 2,
+                    name: "Mixing",
+                    color: "#41dfe2",
+                    icon: "Track/mix.png"
+                },
+                {
+                    id: 3,
+                    name: "Piano",
+                    color: "#dff155",
+                    icon: "Track/piano.png"
+                },
+                {
+                    id: 4,
+                    name: "Sample",
+                    color: "#b1bbca",
+                    icon: "Track/sample.png"
+                },
+                {
+                    name: "Nested File",
+                    icon: "Track/file-open.png",
+                    color: "#b167ff",
+                    open: true,
+                    tracks: [
+                        {
+                            id: 5,
+                            name: "Harmony",
+                            color: "#f5c848",
+                            icon: "Track/harmony.png"
+                        },
+                        {
+                            id: 6,
+                            name: "Mixing",
+                            color: "#41dfe2",
+                            icon: "Track/mix.png"
+                        },
+                        {
+                            id: 7,
+                            name: "Piano",
+                            color: "#dff155",
+                            icon: "Track/piano.png"
+                        },
+                        {
+                            id: 8,
+                            name: "Sample",
+                            color: "#b1bbca",
+                            icon: "Track/sample.png"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        }, {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        }, {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        }, {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        }
+    ];
+    const trackCount = useMemo(() => getTrackCount(fileTracks), [fileTracks]);
+    const [trackHeight] = useState(20);
+
+    const containerRef = useRef<HTMLDivElement>(null);
+    const [timeWidth, setTimeWidth] = useState(initialTimeWidth);
+
+    // Zoom with Ctrl + mouse wheel
+    const handleWheel = (e: React.WheelEvent) => {
+        if (e.ctrlKey) {
+            e.preventDefault();
+            const zoomDelta = e.deltaY > 0 ? -5 : 5;
+            setTimeWidth((prev) => Math.max(10, prev + zoomDelta)); // Min width 10px
+        }
+    };
+
+
     return (
-        <div className="d-flex flex-row">
+        <div className="d-flex flex-row"
+            style={{
+                border: "2.5px solid #f9f9fa",
+                borderRadius: "10px",
+                height: "100%",
+                width: "100%",
+            }}
+        >
+            {/*
+            New plan:
+            TOP HEADER include TRACK SETTING and TIMELINE
+            1 TRACK INCLUDE HEADER AND GRID, FIX TRACK GEN
+            SCROLL ONLY APPLY TO TRACK PART (HEADER + GRID), FIX HEADER CONSTANT
+            */ }
+
+
             <div className="d-flex flex-column justify-content-between align-items-center"
                 style={{
                     fontSize: "15px"
@@ -11,23 +284,26 @@ const Track = () => {
             >
                 <div style={{
                     width: "400px",
-                    height: "700px",         // pending auto
-                    backgroundColor: "black",
+                    height: "100%",         // pending auto
+                    backgroundColor: "#2f3135",
                     borderWidth: "0px",
-                    padding: "10px"
+                    paddingTop: "5px",
+                    paddingLeft: "5px",
+                    borderTopLeftRadius: "10px",
+                    borderBottomLeftRadius: "10px"
                 }}>
-                    {/* Track setting*/ }
+                    {/* Track setting*/}
                     <div className="d-flex flex-row align-items-center justify-content-between"
                         style={{
-                            width: "380px",
-                            height: "24px",
-                            backgroundColor: "black",
+                            width: "395px",
+                            height: "25px",
+                            backgroundColor: "inherit",
                             padding: "10px",
-                            border: "3px solid #70767a",
-                            borderRadius: "10px",
+                            borderRight: "1px solid #70767a",
+                            borderBottom: "1px solid #70767a",
                             overflow: "hidden"
                         }}>
-                        {/* Left part*/ }
+                        {/* Left part*/}
                         <div className="d-flex flex-row"
                             style={{
                                 height: "20px",
@@ -160,67 +436,11 @@ const Track = () => {
                             </button>
                         </div>
                     </div>
-                    {/* Track header, wait for dynamic
+                    {/* Track header
                     Width 50px normal, 60px if open file    
                     */}
-                    <div className="d-flex flex-column">
-                        {/*  DON'T COPY HERE*/ }
-                        <Track_gen color="#e6357a" icon="Track/file.png" name="File closed" borderTop={1} />
-                        {/* File open*/}
-                        <div className="d-flex flex-column align-items-center"
-                            style={{
-                                width: "380px"
-                            }}
-                        >
-                            <div className="d-flex flex-row align-items-center track"
-                                style={{
-                                    width: "380px"            // del top border to match upper's bottom border
-                                }}
-                            >
-                                <div className="d-flex align-items-end justify-content-between track-serial"
-                                    style={{
-                                        width: "60px",
-                                        backgroundColor: "#b167ff" // Change color track here
-                                    }}
-                                >
-                                    <img src="Track/file-open.png" alt="Timeline"        // Change track icon here
-                                        className="track-icon"
-                                    />
-                                    <div style={{
-                                        fontSize: "14px",
-                                        color: "black"
-                                    }}>
-                                           {/* Track id here*/}
-                                    </div>
-                                </div>
-                                <div className="d-flex flex-row fw-bold">
-                                    <button className="mute-track">m</button>
-                                    <button className="stop-track">s</button>
-                                </div>
-                                <div className="d-flex"
-                                    style={{
-                                        borderWidth: "0px",
-                                        gap: "10px"
-                                    }}>
-                                    {/* Track name here*/}
-                                    File opened
-                                </div>
-                            </div>
-                            <div className="d-flex">
-                                <div style={{
-                                        width: "10px"
-                                }} />
-                                <div className="d-flex flex-column">
-                                    {/*  One track in div*/}
-                                    <Track_gen width="370px" color="#f5c848" icon="Track/harmony.png" id={1} name="Harmony" />
-                                    <Track_gen width="370px" color="#41dfe2" icon="Track/mix.png" id={2} name="Mixing" />
-                                    <Track_gen width="370px" color="#dff155" icon="Track/piano.png" id={3} name="Piano" />
-                                    <Track_gen width="370px" color="#b1bbca" icon="Track/sample.png" id={4} name="Sample" />
-                                </div>
-                            </div>
-                        </div>
-                        <Track_gen color="#dff155" icon="Track/piano.png" id={5} name="Piano 2" />
-
+                    <div className="d-flex flex-column">    {/*  Add track header here*/}
+                        {fileTracks.map((track) => renderTrack(track))}
                     </div>
                 </div>
             </div>
@@ -229,24 +449,16 @@ const Track = () => {
                 Extend indefinely based on track
             */}
             <div>
-                {/* Timeline*/}
+                {/* Timeline grid*/}
                 {/* Consider redesign timeline so that it maintains weight during zooming in or out*/}
-                <div className="d-flex flex-row"
-                    style={{
-                        width: "400px",
-                        height: "700px"
-                    }}>
-                    <img src="Track/timeline.png" alt="Timeline"
-                        style={{
-                            width: "563px",
-                            height: "59px"
-                        }} />
-                    <img src="Track/timeline.png" alt="Timeline"
-                        style={{
-                            width: "563px",
-                            height: "59px"
-                        }} />
-                </div>
+                <Track_grid
+                    trackCount={trackCount}
+                    timeSteps={timeSteps}
+                    trackHeight={20}
+                    initialTimeWidth={30}
+                />
+
+
             </div>
 
         </div>

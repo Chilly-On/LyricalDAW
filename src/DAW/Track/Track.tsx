@@ -19,9 +19,8 @@ const getTrackCount = (tracks) => {
 };
 
 
-const Track = () => {
+const Track = ({ isPlaying, setIsPlaying }) => {
     const timeSteps = 30;
-    const initialTimeWidth = 30;
 
     const renderTrack = (track, level = 0) => (
         <Track_gen
@@ -230,14 +229,12 @@ const Track = () => {
             name: "Piano 2",
             icon: "Track/piano.png",
             color: "#dff155"
-        },
-        {
+        }, {
             id: 9,
             name: "Piano 2",
             icon: "Track/piano.png",
             color: "#dff155"
-        },
-        {
+        }, {
             id: 9,
             name: "Piano 2",
             icon: "Track/piano.png",
@@ -245,205 +242,215 @@ const Track = () => {
         }
     ];
     const trackCount = useMemo(() => getTrackCount(fileTracks), [fileTracks]);
-    const [trackHeight] = useState(20);
 
-    const containerRef = useRef<HTMLDivElement>(null);
-    const [timeWidth, setTimeWidth] = useState(initialTimeWidth);
+    // For auto-scroll
+    const scrollRef = useRef(null);
 
-    // Zoom with Ctrl + mouse wheel
-    const handleWheel = (e: React.WheelEvent) => {
-        if (e.ctrlKey) {
-            e.preventDefault();
-            const zoomDelta = e.deltaY > 0 ? -5 : 5;
-            setTimeWidth((prev) => Math.max(10, prev + zoomDelta)); // Min width 10px
+    // Scroll effect for isPlaying
+    useEffect(() => {
+        let animationFrameId;
+
+        const scrollStep = () => {
+            const container = scrollRef.current;
+            if (container) {
+                container.scrollLeft += 2; // Adjust scroll speed
+                animationFrameId = requestAnimationFrame(scrollStep);
+            }
+        };
+
+        if (isPlaying) {
+            animationFrameId = requestAnimationFrame(scrollStep);
         }
-    };
 
+        return () => cancelAnimationFrame(animationFrameId);
+    }, [isPlaying]);
 
     return (
         <div className="d-flex flex-row"
+            ref={scrollRef}
             style={{
+                backgroundColor: "#2f3135",
                 border: "2.5px solid #f9f9fa",
                 borderRadius: "10px",
                 height: "100%",
                 width: "100%",
+                overflow: "auto"
             }}
         >
-            {/*
-            New plan:
-            TOP HEADER include TRACK SETTING and TIMELINE
-            1 TRACK INCLUDE HEADER AND GRID, FIX TRACK GEN
-            SCROLL ONLY APPLY TO TRACK PART (HEADER + GRID), FIX HEADER CONSTANT
-            */ }
 
 
-            <div className="d-flex flex-column justify-content-between align-items-center"
+            <div className="d-flex flex-column align-items-center"
                 style={{
-                    fontSize: "15px"
-                }}
-            >
-                <div style={{
-                    width: "400px",
+                fontSize: "15px",
+                width: "400px",
                     height: "100%",         // pending auto
-                    backgroundColor: "#2f3135",
-                    borderWidth: "0px",
-                    paddingTop: "5px",
-                    paddingLeft: "5px",
-                    borderTopLeftRadius: "10px",
-                    borderBottomLeftRadius: "10px"
-                }}>
-                    {/* Track setting*/}
-                    <div className="d-flex flex-row align-items-center justify-content-between"
+                backgroundColor: "inherit",
+                position: "sticky",
+                left: 0,
+                borderWidth: "0px",
+                paddingLeft: "5px",
+                borderTopLeftRadius: "10px",
+                borderBottomLeftRadius: "10px",
+                zIndex: 3
+            }}>
+                {/* Track setting*/}
+                <div className="d-flex flex-row align-items-center justify-content-between"
+                    style={{
+                        position: "sticky",
+                        top: 0,
+                        width: "395px",
+                        height: "25px",
+                        backgroundColor: "inherit",
+                        padding: "10px",
+                        borderRight: "1px solid #70767a",
+                        borderBottom: "1px solid #70767a"
+                    }}>
+                    {/* Left part*/}
+                    <div className="d-flex flex-row"
                         style={{
-                            width: "395px",
-                            height: "25px",
-                            backgroundColor: "inherit",
-                            padding: "10px",
-                            borderRight: "1px solid #70767a",
-                            borderBottom: "1px solid #70767a",
-                            overflow: "hidden"
+                            height: "20px",
+                            backgroundColor: "#898e8c", // match with parent color
+                            alignItems: "center",
+                            border: "1px solid #70767a",
+                            borderRadius: "10px"
                         }}>
-                        {/* Left part*/}
+                        <button
+                            style={{
+                                backgroundColor: "inherit", // match with parent color
+                                display: "flex",
+                                alignItems: "inherit",
+                                justifyContent: "inherit",
+                                border: "0px",
+                                borderTopLeftRadius: "10px",
+                                borderBottomLeftRadius: "10px"
+                            }}
+                        >
+                            <img
+                                src="Track/add-track.png"
+                                alt="Play Button"
+                                style={{
+                                    height: "12px", width: "12px"
+                                }} // scales arrow within the square
+                            />
+                        </button>
+                        <button
+                            style={{
+                                backgroundColor: "inherit", // match with parent color
+                                display: "flex",
+                                alignItems: "inherit",
+                                justifyContent: "inherit",
+                                border: "0px",
+                                borderTopRightRadius: "10px",
+                                borderBottomRightRadius: "10px"
+                            }}
+                        >
+                            <img
+                                src="Track/category.png"
+                                alt="Play Button"
+                                style={{
+                                    height: "12px", width: "12px"
+                                }} // scales arrow within the square
+                            />
+                        </button>
+                    </div>
+                    {/* Right part*/}
+                    <div className="d-flex flex-row align-items-center">
                         <div className="d-flex flex-row"
                             style={{
                                 height: "20px",
-                                backgroundColor: "#898e8c", // match with parent color
                                 alignItems: "center",
-                                border: "1px solid #70767a",
+                                justifyContent: "center",
+                                marginRight: "10px",
+                                gap: "0px", // ensure no spacing
+                                border: "3px solid #70767a",
                                 borderRadius: "10px"
-                            }}>
-                            <button
-                                style={{
-                                    backgroundColor: "inherit", // match with parent color
-                                    display: "flex",
-                                    alignItems: "inherit",
-                                    justifyContent: "inherit",
-                                    border: "0px",
-                                    borderTopLeftRadius: "10px",
-                                    borderBottomLeftRadius: "10px"
-                                }}
-                            >
-                                <img
-                                    src="Track/add-track.png"
-                                    alt="Play Button"
-                                    style={{
-                                        height: "12px", width: "12px"
-                                    }} // scales arrow within the square
-                                />
-                            </button>
-                            <button
-                                style={{
-                                    backgroundColor: "inherit", // match with parent color
-                                    display: "flex",
-                                    alignItems: "inherit",
-                                    justifyContent: "inherit",
-                                    border: "0px",
-                                    borderTopRightRadius: "10px",
-                                    borderBottomRightRadius: "10px"
-                                }}
-                            >
-                                <img
-                                    src="Track/category.png"
-                                    alt="Play Button"
-                                    style={{
-                                        height: "12px", width: "12px"
-                                    }} // scales arrow within the square
-                                />
-                            </button>
-                        </div>
-                        {/* Right part*/}
-                        <div className="d-flex flex-row align-items-center">
-                            <div className="d-flex flex-row"
-                                style={{
-                                    height: "20px",
+                            }}
+                        >
+                            <div
+                                style={{        // pending for dynamic
+                                    width: "100px",
                                     alignItems: "center",
-                                    justifyContent: "center",
-                                    marginRight: "10px",
-                                    gap: "0px", // ensure no spacing
-                                    border: "3px solid #70767a",
-                                    borderRadius: "10px"
-                                }}
-                            >
-                                <div
-                                    style={{        // pending for dynamic
-                                        width: "100px",
-                                        alignItems: "center",
-                                        textAlign: "right",
-                                        marginRight: "10px"
-                                    }}>
-                                    0/0
-                                </div>
-                                <button
-                                    style={{
-                                        backgroundColor: "inherit",
-                                        display: "flex",
-                                        alignItems: "inherit",
-                                        justifyContent: "center",
-                                        borderWidth: "0px",
-                                        borderLeft: "3px solid #70767a",
-                                        borderRight: "3px solid #70767a",
-                                    }}
-                                >
-                                    <img
-                                        src="Track/house.png"
-                                        alt="Play Button"
-                                        style={{
-                                            height: "15px",
-                                            width: "15px"
-                                        }} // scales arrow within the square
-                                    />
-                                </button>
-                                <button
-                                    style={{
-                                        height: "15px",
-                                        backgroundColor: "inherit",
-                                        display: "flex",
-                                        alignItems: "inherit",
-                                        justifyContent: "center",
-                                        borderWidth: "0px",
-                                        borderRadius: "5px"
-                                    }}
-                                >
-                                    <img
-                                        src="Track/collapse.png"
-                                        alt="Play Button"
-                                        style={{
-                                            height: "12px"
-                                        }} // scales arrow within the square
-                                    />
-                                </button>
+                                    textAlign: "right",
+                                    marginRight: "10px"
+                                }}>
+                                0/0
                             </div>
                             <button
                                 style={{
-                                    height: "20px",
-                                    width: "30px",
-                                    backgroundColor: "#898e8c",
+                                    backgroundColor: "inherit",
                                     display: "flex",
                                     alignItems: "inherit",
                                     justifyContent: "center",
-                                    textAlign: "center",
-                                    border: "1px solid #70767a",
-                                    borderRadius: "3px"
+                                    borderWidth: "0px",
+                                    borderLeft: "3px solid #70767a",
+                                    borderRight: "3px solid #70767a",
                                 }}
                             >
                                 <img
-                                    src="Track/search.png"
+                                    src="Track/house.png"
                                     alt="Play Button"
                                     style={{
-                                        height: "15px", width: "12px"
+                                        height: "15px",
+                                        width: "15px"
+                                    }} // scales arrow within the square
+                                />
+                            </button>
+                            <button
+                                style={{
+                                    height: "15px",
+                                    backgroundColor: "inherit",
+                                    display: "flex",
+                                    alignItems: "inherit",
+                                    justifyContent: "center",
+                                    borderWidth: "0px",
+                                    borderRadius: "5px"
+                                }}
+                            >
+                                <img
+                                    src="Track/collapse.png"
+                                    alt="Play Button"
+                                    style={{
+                                        height: "12px"
                                     }} // scales arrow within the square
                                 />
                             </button>
                         </div>
-                    </div>
-                    {/* Track header
-                    Width 50px normal, 60px if open file    
-                    */}
-                    <div className="d-flex flex-column">    {/*  Add track header here*/}
-                        {fileTracks.map((track) => renderTrack(track))}
+                        <button
+                            style={{
+                                height: "20px",
+                                width: "30px",
+                                backgroundColor: "#898e8c",
+                                display: "flex",
+                                alignItems: "inherit",
+                                justifyContent: "center",
+                                textAlign: "center",
+                                border: "1px solid #70767a",
+                                borderRadius: "3px"
+                            }}
+                        >
+                            <img
+                                src="Track/search.png"
+                                alt="Play Button"
+                                style={{
+                                    height: "15px", width: "12px"
+                                }} // scales arrow within the square
+                            />
+                        </button>
                     </div>
                 </div>
+                {/* Track header
+                Width 50px normal, 60px if open file    
+                */}
+                <div className="d-flex flex-column"
+                    style={{
+                        backgroundColor: "inherit"
+                    } }
+                >
+                    {/*  Add track header here*/}
+                    {fileTracks.map((track) => renderTrack(track))}
+                </div>
             </div>
+
             {/* Track content part
                 Clear overflow
                 Extend indefinely based on track

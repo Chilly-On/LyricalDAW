@@ -1,3 +1,12 @@
+# Install the project development environment
+Run these command in terminal:
+
+```
+npm install react-bootstrap bootstrap
+npm install -D postcss postcss-cli
+npx tailwindcss init -p
+```
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

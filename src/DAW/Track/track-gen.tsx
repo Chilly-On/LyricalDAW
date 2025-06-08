@@ -30,7 +30,7 @@ const Track_gen: React.FC<TrackGenProps> = ({ width = "395px", widthHead = "50px
                     {/* Clickable Header */}
                     <div
                         className="d-flex flex-row justify-content-between align-items-center track"
-                        onClick={() => setExpanded(!expanded)} // NEW: toggle on click
+                        //onClick={() => setExpanded(!expanded)} // NEW: toggle on click
                         style={{
                             width,
                             paddingLeft: `${indent}px` // NEW: indentation

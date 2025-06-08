@@ -7,21 +7,22 @@ import To_start from './to-start';
 import To_end from './to-end';
 import Prev from './prev';
 import Next from './next';
-import Return from './return';
+import Repeat from './repeat';
 import Stop from './stop';
 import Play from './play';
 import Record from './record';
 
-const Footer = () => {
+const Footer = ({ isPlaying, setIsPlaying }) => {
     // Bottom menu in blank (track-control)
     return (
-        <footer className="d-flex flex-row align-items-center text-center justify-content-between"
+        <footer className="d-flex flex-row flex-wrap align-items-center text-center justify-content-between"
             style={{
-                height: "5vh"
-            } }
+                height: "100%"
+            }}
         >
             <Track_left />
             <Track_right />
+           
             <div
                 style={{
                     display: "flex",
@@ -32,7 +33,7 @@ const Footer = () => {
             >
                 <div
                     style={{
-                        display: "flex",
+                        height: "30px",
                         flexDirection: "row",
                         alignItems: "center",
                         justifyContent: "center",
@@ -44,9 +45,9 @@ const Footer = () => {
                     <To_end />
                     <Prev />
                     <Next />
-                    <Return />
-                    <Stop/>
-                    <Play />
+                    <Repeat />
+                    <Stop isPlaying={isPlaying} onPlay={() => setIsPlaying(false)} />   {/* () =>: wait click interaction*/ }
+                    <Play isPlaying={isPlaying} onPlay={() => setIsPlaying(prev => !prev)} />
                     <Record />
                 </div>
                 <button
@@ -62,11 +63,11 @@ const Footer = () => {
                     />
                 </button>
             </div>
-
-
+            
             <Track_pos />
             <Time_pos />
             <Bpm />
+            
         </footer>
     );
 };

@@ -1,22 +1,23 @@
-const Play = () => {
+const Play = ({ onPlay, isPlaying }) => {
     return (
         <button
+            onClick={onPlay}
             style={{
                 width: "40px",
                 height: "30px",
-                backgroundColor: "#69cd84", // green color
+                backgroundColor: isPlaying ? "#69cd84" : "#70767a" , // set to #69cd84 when play
                 display: "flex",
-                alignItems: "inherit",
-                justifyContent: "inherit",
+                alignItems: "center",
+                justifyContent: "center",
                 borderWidth: "0px"
             }}
         >
             <img
                 src="Footer/play.png"
                 alt="Play Button"
-                style={{ width: "50%", height: "50%" }} // scales arrow within the square
+                style={{ width: "50%", height: "50%" }}
             />
-            </button>
+        </button>
     );
 };
 

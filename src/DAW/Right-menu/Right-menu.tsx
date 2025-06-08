@@ -1,7 +1,8 @@
 ﻿const Right_menu = () => {
     return (
-        <div className="d-flex flex-column gap-2"
+        <div className="flex-column gap-2 right-menu"
             style={{
+                display: "flex",
                 width: "300px",
                 height: "100%",         // pending auto
                 backgroundColor: "#2f3238", // green color
@@ -118,7 +119,6 @@
                     paddingBottom: "5px",
                     borderWidth: "0px",
                     borderRadius: "5px",       // match shape
-                    
                 }}
             >
                 <img

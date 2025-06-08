@@ -1,10 +1,10 @@
-const Play = () => {
+const Repeat = () => {
     return (
         <button
             style={{
                 width: "40px",
                 height: "30px",
-                backgroundColor: "#70767a", // green color
+                backgroundColor: "#8f83f2",
                 display: "flex",
                 alignItems: "inherit",
                 justifyContent: "inherit",
@@ -20,4 +20,4 @@ const Play = () => {
     );
 };
 
-export default Play;
+export default Repeat;

@@ -22,7 +22,10 @@ html, body {
     display: flex;
     flex-direction: column;
 }
-
+body {
+    font-size: 15px !important;
+    display: flex;
+}
 /* Header Styles */
 header {
     background-color: white;
@@ -77,20 +80,6 @@ header {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-}
-
-.inner-main {
-    height: 100%;
-    width: 100%;
-    /*padding: 20px;*/
-    color: white;
-    background-color: black;
-    border: 50px;
-    border-color: #fd8818;
-    align-self: center;
-    align-content: center;
-    display: flex;
-    flex-direction: column;
 }
 
 .ads-section {
@@ -197,7 +186,7 @@ footer {
     align-items: center;
     margin-top: auto;
     padding: 0px 20px;
-    flex: 1;
+    /*flex: 1;*/
 }
 
     footer div {
@@ -206,14 +195,14 @@ footer {
         gap: 5px;
     }
 
-    footer a {
-        color: #007bff;
-        text-decoration: none;
-    }
+footer a {
+    color: #007bff;
+    text-decoration: none;
+}
 
-        footer a:hover {
-            text-decoration: underline;
-        }
+footer a:hover {
+    text-decoration: underline;
+}
 
 .footer-nav {
     display: flex;
@@ -427,6 +416,27 @@ form {
 }
 
 /* New CSS */
+@media (max-width: 1200px) {
+    .right-menu {
+        display: none !important;
+    }
+    /* main {
+        height: calc(100vh - 90px) !important;
+    }*/
+}
+main {
+    height: calc(100vh - 30px);
+    width: 100%;
+    /*padding: 20px;*/
+    color: white;
+    background-color: black;
+    border: 50px;
+    border-color: #fd8818;
+    align-self: center;
+    align-content: center;
+    display: flex;
+    flex-direction: column;
+}
 .track {
     width: 380px;
     height: 20px;

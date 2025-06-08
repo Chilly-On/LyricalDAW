@@ -1,9 +1,10 @@
 ﻿const Right_menu = () => {
     return (
-        <div className="d-flex flex-column gap-2"
+        <div className="flex-column gap-2 right-menu"
             style={{
+                display: "flex",
                 width: "300px",
-                height: "700px",         // pending auto
+                height: "100%",         // pending auto
                 backgroundColor: "#2f3238", // green color
                 alignItems: "center",
                 borderWidth: "0px",
@@ -118,7 +119,6 @@
                     paddingBottom: "5px",
                     borderWidth: "0px",
                     borderRadius: "5px",       // match shape
-                    
                 }}
             >
                 <img
@@ -147,7 +147,8 @@
                 <div>
                     Digital Scale
                 </div>
-                <div style={{ color:"#70767a" }} >                          { // change to dynamic later
+                <div style={{ color: "#70767a" }} >
+                    { // change to dynamic later
                 }
                     -18 dBFS
                 </div>
@@ -179,6 +180,7 @@
                     height: "100%"
                 }}
             >
+                {/* dynamic later */}
                 <div className="d-flex flex-column"
                     style={{
                         width: "50px",

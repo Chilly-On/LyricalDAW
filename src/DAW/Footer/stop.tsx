@@ -1,10 +1,11 @@
-const Play = () => {
+const Play = ({ onPlay, isPlaying }) => {
     return (
         <button
+            onClick={onPlay}
             style={{
                 width: "40px",
                 height: "30px",
-                backgroundColor: "#70767a", // green color
+                backgroundColor: isPlaying ? "#70767a" : "#a2a9ac", // set to inherit when play
                 display: "flex",
                 alignItems: "inherit",
                 justifyContent: "inherit",

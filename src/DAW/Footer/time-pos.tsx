@@ -1,22 +1,46 @@
 const Time_pos = () => {
     return (
-        <div style={{ position: "relative", width: "150px" }}>
-            <img
-                src="Footer/time-pos.png"
-                alt="Track Position"
-                style={{ display: "block", width: "100%" }}
-            />
-            <div
+        <div className="flex-row align-items-center justify-content-center"
+            style={{
+                width: "150px",
+                height: "25px",
+                backgroundColor: "black",
+                marginRight: "10px",
+                gap: "0px", // ensure no spacing
+                border: "3px solid #70767a",
+                borderRadius: "10px"
+            }}
+        >
+            <div className="justify-content-center align-items-center"
                 style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "60px",
-                    transform: "translateY(-50%)",
-                    
-                    fontSize: "15px"
+                    width: "15px",
+                    marginRight: "10px",
+                    position: "relative",
+                    borderTopLeftRadius: "5px",
+                    borderBottomLeftRadius: "5px"
+                }}>
+                <img
+                    src="Footer/time-pos.png"
+                    alt="Play Button"
+                    style={{
+                        position: "absolute",
+                        left: 5,
+                        height: "15px"
+                    }} // scales arrow within the square
+                />
+            </div>
+            <div className="justify-content-center text-end"
+                style={{
+                    width: "140px",
+                    height: "100%",
+                    backgroundColor: "inherit",
+                    paddingRight: "10px",
+                    borderWidth: "0px",
+                    borderTopRightRadius: "5px",
+                    borderBottomRightRadius: "5px",
+                    borderLeft: "3px solid #70767a"
                 }}
-            >
-                0:00:00.000
+            >  0:00:00.000
             </div>
         </div>
     );

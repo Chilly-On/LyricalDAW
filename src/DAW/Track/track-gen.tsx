@@ -12,7 +12,7 @@ interface TrackGenProps {       // for input parameters
     level?: number;
 }
 
-const Track_gen: React.FC<TrackGenProps> = ({ width = "395px", widthHead = "50px", color, icon, id, name, borderTop = 0, children, level = 0 }) => { // add parameters
+const Track_gen: React.FC<TrackGenProps> = ({ width = "295px", widthHead = "50px", color, icon, id, name, borderTop = 0, children, level = 0 }) => { // add parameters
     const isContainer = !!children;
     const [expanded, setExpanded] = useState(true); // NEW: toggle children visibility
     const indent = 10 * level;

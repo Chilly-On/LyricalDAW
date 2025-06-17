@@ -9,7 +9,9 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="private\plan for music\**" />
     <None Remove="src\DAW\Footer - Copy\**" />
+    <TypeScriptConfiguration Remove="private\plan for music\**" />
     <TypeScriptConfiguration Remove="src\DAW\Footer - Copy\**" />
   </ItemGroup>
   <ItemGroup>

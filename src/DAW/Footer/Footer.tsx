@@ -12,7 +12,16 @@ import Stop from './stop';
 import Play from './play';
 import Record from './record';
 
-const Footer = ({ isPlaying, setIsPlaying }) => {
+const Footer = ({ player, isPlaying, setIsPlaying, timePos }) => {
+    const handlePlay = () => {
+        isPlaying ? player.requestPause() : player.requestPlay();
+        setIsPlaying(prev => !prev);
+    }
+    const handleStop = () => {
+        setIsPlaying(false);
+        player.requestStop();
+    }
+
     // Bottom menu in blank (track-control)
     return (
         <footer className="d-flex flex-row flex-wrap align-items-center text-center justify-content-between"
@@ -46,8 +55,8 @@ const Footer = ({ isPlaying, setIsPlaying }) => {
                     <Prev />
                     <Next />
                     <Repeat />
-                    <Stop isPlaying={isPlaying} onPlay={() => setIsPlaying(false)} />   {/* () =>: wait click interaction*/ }
-                    <Play isPlaying={isPlaying} onPlay={() => setIsPlaying(prev => !prev)} />
+                    <Stop player={player} isPlaying={isPlaying} onPlay={handleStop} />   {/* () =>: wait click interaction*/ }
+                    <Play isPlaying={ isPlaying } onPlay={ handlePlay } />
                     <Record />
                 </div>
                 <button
@@ -65,7 +74,7 @@ const Footer = ({ isPlaying, setIsPlaying }) => {
             </div>
             
             <Track_pos />
-            <Time_pos />
+            <Time_pos timePos={timePos} />
             <Bpm />
             
         </footer>

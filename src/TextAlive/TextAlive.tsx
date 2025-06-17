@@ -1,18 +1,14 @@
 ﻿/* Tải npm install textalive-app-api
 Code: qzuKA90J9NSxH5mv
 */
-import { Player } from "textalive-app-api";
 
-const TextAlive = ({ isPlaying, setIsPlaying }) => {
-    // Initialize TextAlive Player
-    const player = new Player({ app: { token: "qzuKA90J9NSxH5mv" } });
-    const bar = document.querySelector("#bar");
+const TextAlive = ({ player, isPlaying, setIsPlaying, setTimePos }) => {
     const textContainer = document.querySelector("#text");
 
     player.addListener({
         /* when the API is loaded */
-        onAppReady(app) {
-            if (!app.managed) { // Add music here
+        onAppReady: (app) => {
+            if (!app.managed) { // If load music first time, Add music here
                 // アリフレーション / 雨良 Amala
                 player.createFromSongUrl("https://piapro.jp/t/SuQO/20250127235813", {
                     video: {
@@ -26,74 +22,127 @@ const TextAlive = ({ isPlaying, setIsPlaying }) => {
             }
         },
 
-        /* The code activated when change music */
-        onAppMediaChange() {
-
+        onAppMediaChange: (mediaUrl) => {
+            console.log("New music is set:", mediaUrl);
+        },
+        onPlay: () => {
+            console.log("Music play");
+        },
+        onPause: () => {
+            console.log("Music paused");
+        },
+        onStop: () => {
+            console.log("Music stopped");
+        },
+        onMediaSeek: (position) => {
+            //console.log("Music timeline moved to:", position, "ms");
+            setTimePos(position);
+        },
+        /*Get current beat information */
+        onTimeUpdate: (position) => {   // position: Music time position
+            //console.log("Music time position:", position, "ms");
+            setTimePos(position);
+        },
+        //onThrottledTimeUpdate: (position) => {
+        //    console.log("Music time position:", position, "ms");
+        //    setTimePos(position);
+        //},
+        onVideoReady: (v) => {
+            if (v.firstChar) {   // If have lyrics
+                console.log(v.firstPhrase.toString());      // Print the whole sentence: 取って付けたような
+                console.log(v.firstPhrase.next.toString()); // Print next sentence.
+            }
+        },
+        onTextLoad: (text) => {
+            console.log("Load: ", text);
+            //document.querySelector("#lyrics").textContent = text;
         },
 
-        /* The code activated when getting the information of music */
-        onVideoReady() {
+        ///* when the API is loaded */
+        //onAppReady(app) {
+        //    if (!app.managed) { // Add music here
+        //        // アリフレーション / 雨良 Amala
+        //        player.createFromSongUrl("https://piapro.jp/t/SuQO/20250127235813", {
+        //            video: {
+        //                beatId: 4694276,
+        //                chordId: 2830731,
+        //                repetitiveSegmentId: 2946479,
+        //                lyricId: 67811,
+        //                lyricDiffId: 20655
+        //            },
+        //        });
+        //    }
+        //},
 
-        },
+        ///* The code activated when change music */
+        //onAppMediaChange() {
+
+        //},
+
+        ///* The code activated when getting the information of music */
+        //onVideoReady() {
+
+        //},
 
         /* The code activated when the media controller is ready */
+        /* Called when Timer is ready for playback */
         onTimerReady() {
             if (!isPlaying) {                    // ensure play 1 time
-                console.log("Music played");
-                setIsPlaying(true);
-                player.requestPlay();   // Touch anywhere in the screen to play
+                console.log("Timer ready");
+                //setIsPlaying(true);
+                //player.requestPlay();   // Touch anywhere in the screen to play
             }
             else {
                 console.log("Stop excessing play");
             }
         },
 
-        /* Get current beat information */
-        onTimeUpdate(position) {
-            // 現在のビート情報を取得
-            let beat = player.findBeat(position);
-            if (b !== beat) {
-                if (beat) {
-                    requestAnimationFrame(() => {
-                        bar.className = "active";
-                        requestAnimationFrame(() => {
-                            bar.className = "active beat";
-                        });
-                    });
-                }
-                b = beat;
-            }
+        ///* Get current beat information */
+        //onTimeUpdate(position) {
+        //    // 現在のビート情報を取得
+        //    let beat = player.findBeat(position);
+        //    if (b !== beat) {
+        //        if (beat) {
+        //            requestAnimationFrame(() => {
+        //                bar.className = "active";
+        //                requestAnimationFrame(() => {
+        //                    bar.className = "active beat";
+        //                });
+        //            });
+        //        }
+        //        b = beat;
+        //    }
 
-            // 歌詞情報がなければこれで処理を終わる
-            if (!player.video.firstChar) {
-                return;
-            }
+        //    // 歌詞情報がなければこれで処理を終わる
+        //    if (!player.video.firstChar) {
+        //        return;
+        //    }
 
-            // 巻き戻っていたら歌詞表示をリセットする
-            if (c && c.startTime > position + 1000) {
-                resetChars();
-            }
+        //    // 巻き戻っていたら歌詞表示をリセットする
+        //    if (c && c.startTime > position + 1000) {
+        //        resetChars();
+        //    }
 
-            // 500ms先に発声される文字を取得
-            let current = c || player.video.firstChar;
-            while (current && current.startTime < position + 500) {
-                // 新しい文字が発声されようとしている
-                if (c !== current) {
-                    newChar(current);
-                    c = current;
-                }
-                current = current.next;
-            }
-        },
+        //    // 500ms先に発声される文字を取得
+        //    let current = c || player.video.firstChar;
+        //    while (current && current.startTime < position + 500) {
+        //        // 新しい文字が発声されようとしている
+        //        if (c !== current) {
+        //            newChar(current);
+        //            c = current;
+        //        }
+        //        current = current.next;
+        //    }
+        //},
 
-        /* When music play */
-        onPlay() {
+        ///* When music play */
+        //onPlay() {
 
-        },
+        //},
 
-        /* When music stop */
-        onPause() {
-        }
+        ///* When music stop */
+        //onPause() {
+        //}
     });
 
     /**
@@ -149,7 +198,13 @@ const TextAlive = ({ isPlaying, setIsPlaying }) => {
         while (textContainer.firstChild)
             textContainer.removeChild(textContainer.firstChild);
     }
-};
+
+    //return (
+    //    <div id="lyrics"
+    //        style={style}
+    //    ></div>     // return text container
+    //);
+}
 
 export default TextAlive;
 

@@ -1,4 +1,15 @@
-const Time_pos = () => {
+const formatTime = (ms: number): string => {
+    const hours = Math.floor(ms / 3600000);
+    const minutes = Math.floor((ms % 3600000) / 60000);
+    const seconds = Math.floor((ms % 60000) / 1000);
+    const milliseconds = Math.floor(ms % 1000);
+
+    return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds
+        .toString()
+        .padStart(2, '0')}.${milliseconds.toString().padStart(3, '0')}`;
+};
+
+const Time_pos = ({ timePos } ) => {
     return (
         <div className="flex-row align-items-center justify-content-center"
             style={{
@@ -40,7 +51,7 @@ const Time_pos = () => {
                     borderBottomRightRadius: "5px",
                     borderLeft: "3px solid #70767a"
                 }}
-            >  0:00:00.000
+            >{formatTime(timePos)}
             </div>
         </div>
     );

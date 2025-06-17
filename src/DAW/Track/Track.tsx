@@ -1,3 +1,4 @@
+/// <reference path="../footer/record.tsx" />
 import React from "react";
 import { useMemo, useRef, useEffect, useState } from "react";
 import Track_gen from "./track-gen";
@@ -8,6 +9,7 @@ const getTrackCount = (tracks) => {
     const traverse = (items) => {
         for (const item of items) {
             if (item.tracks && item.open) {
+                count += 1;             // count for file
                 traverse(item.tracks);
             } else {
                 count += 1;
@@ -20,7 +22,7 @@ const getTrackCount = (tracks) => {
 
 
 const Track = ({ isPlaying, setIsPlaying }) => {
-    const timeSteps = 30;
+    const timeSteps = 50;
 
     const renderTrack = (track, level = 0) => (
         <Track_gen
@@ -107,6 +109,77 @@ const Track = ({ isPlaying, setIsPlaying }) => {
                 }
             ]
         },
+/*        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 10,
+            name: "A very long name track to test overflow",
+            icon: "Track/piano.png",
+            color: "#41dfe2"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        }, {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
+        {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        },
         {
             id: 9,
             name: "Piano 2",
@@ -153,68 +226,22 @@ const Track = ({ isPlaying, setIsPlaying }) => {
             name: "Piano 2",
             icon: "Track/piano.png",
             color: "#dff155"
-        },
-        {
+        }, {
             id: 9,
             name: "Piano 2",
             icon: "Track/piano.png",
             color: "#dff155"
-        },
-        {
+        }, {
             id: 9,
             name: "Piano 2",
             icon: "Track/piano.png",
             color: "#dff155"
-        },
-        {
+        }, {
             id: 9,
             name: "Piano 2",
             icon: "Track/piano.png",
             color: "#dff155"
-        },
-        {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        },
-        {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        },
-        {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        },
-        {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        },
-        {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        },
-        {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        },
-        {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        },
-        {
+        }, {
             id: 9,
             name: "Piano 2",
             icon: "Track/piano.png",
@@ -235,13 +262,48 @@ const Track = ({ isPlaying, setIsPlaying }) => {
             icon: "Track/piano.png",
             color: "#dff155"
         }, {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        }, {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        }, {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        }, {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        }, {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        }, {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        }, {
+            id: 9,
+            name: "Piano 2",
+            icon: "Track/piano.png",
+            color: "#dff155"
+        }, */{
             id: 9,
             name: "Piano 2",
             icon: "Track/piano.png",
             color: "#dff155"
         }
     ];
-    const trackCount = useMemo(() => getTrackCount(fileTracks), [fileTracks]);
+    // const trackCount = useMemo(() => getTrackCount(fileTracks), [fileTracks]);
 
     // For auto-scroll
     const scrollRef = useRef(null);
@@ -265,6 +327,9 @@ const Track = ({ isPlaying, setIsPlaying }) => {
         return () => cancelAnimationFrame(animationFrameId);
     }, [isPlaying]);
 
+    // Timeline pointer should claim all of track grid:
+    const timelineHeight = 25 + 20 * getTrackCount(fileTracks);
+
     return (
         <div className="d-flex flex-row"
             ref={scrollRef}
@@ -272,7 +337,8 @@ const Track = ({ isPlaying, setIsPlaying }) => {
                 backgroundColor: "#2f3135",
                 border: "2.5px solid #f9f9fa",
                 borderRadius: "10px",
-                height: "100%",
+                //height: timelineHeight,                 // change to dynamic to match the number of real tracks
+                minHeight: "100%",
                 width: "100%",
                 overflow: "auto"
             }}
@@ -282,8 +348,8 @@ const Track = ({ isPlaying, setIsPlaying }) => {
             <div className="d-flex flex-column align-items-center"
                 style={{
                 fontSize: "15px",
-                width: "400px",
-                    height: "100%",         // pending auto
+                width: "300px",
+                height: "100%",         // pending auto
                 backgroundColor: "inherit",
                 position: "sticky",
                 left: 0,
@@ -298,7 +364,7 @@ const Track = ({ isPlaying, setIsPlaying }) => {
                     style={{
                         position: "sticky",
                         top: 0,
-                        width: "395px",
+                        width: "295px",
                         height: "25px",
                         backgroundColor: "inherit",
                         padding: "10px",
@@ -455,19 +521,34 @@ const Track = ({ isPlaying, setIsPlaying }) => {
                 Clear overflow
                 Extend indefinely based on track
             */}
-            <div>
+            <div
+                style={{
+                    height: "100%",
+                    position: "relative"
+                }}
+            >
                 {/* Timeline grid*/}
                 {/* Consider redesign timeline so that it maintains weight during zooming in or out*/}
                 <Track_grid
-                    trackCount={trackCount}
+                    //trackCount={trackCount}
                     timeSteps={timeSteps}
                     trackHeight={20}
                     initialTimeWidth={30}
                 />
-
-
+                {/* Timeline pointer*/}
+                <div
+                    style={{
+                        width: "5px",
+                        height: timelineHeight,         // change to dynamic to match the number of girds (real tracks)
+                        backgroundColor: "black", // green color
+                        position: "absolute",
+                        top: 0,
+                        left: 30,               // Adjust timeline pointer's position here
+                        alignItems: "center",
+                        borderWidth: "0px"
+                    }}
+                />
             </div>
-
         </div>
     );
 };

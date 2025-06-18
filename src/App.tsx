@@ -5,10 +5,8 @@ import './index.css'; // Use Tailwind's CSS instead of App.css
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Player, Ease } from "textalive-app-api";
 import P5 from 'p5';
-function App() {
-    // Initialize TextAlive Player
-    // Inital at beginning to make sure 1 player are in the project
-    const player = new Player({ app: { token: "test" } });  // use to avoid spam, change token later
+
+function loadText(player) {
     // Use p5
     new P5((p5) => {
         // Set up canvas
@@ -96,11 +94,17 @@ function App() {
             }
         };
     });
+}
 
+function App() {
+    // Initialize TextAlive Player
+    // Inital at beginning to make sure 1 player are in the project
+    const player = new Player({ app: { token: "test" } });  // use to avoid spam, change token later
+    loadText(player);
 
     return (
         <div className="flex flex-col">
-            <DAW player={ player } />
+            <DAW player={player} />
         </div>
     );
 }

@@ -1,13 +1,48 @@
 ﻿/* Tải npm install textalive-app-api
 Code: qzuKA90J9NSxH5mv
 */
+import { useEffect } from "react";
+import { Player, type IBeat, type IPlayerApp } from "textalive-app-api";
 
-const TextAlive = ({ player, isPlaying, setIsPlaying, setTimePos }) => {
-    const textContainer = document.querySelector("#text");
+type PlayerRefs = {
+    timePos: number,
+    beatPos: number,
+    isPlaying: boolean;
+    repeat: boolean;
+    beatLeftPos: number;
+    beatRightPos: number;
+    leftTime: number;
+    masterVolume: number;
+};
+interface TextAliveProps {       // for input parameters
+    player: Player,
+    timePos: number,
+    setTimePos: (n: number) => void,
+    beatPos: number,
+    setBeatPos: (n: number) => void,
+    refs: React.RefObject<PlayerRefs>,
+    masterVolume: number,
+    setMasterVolume: (n: number) => void,
+}
+
+const TextAlive: React.FC<TextAliveProps> = ({ player, timePos, setTimePos, beatPos, setBeatPos, refs, masterVolume, setMasterVolume }) => {
+    let b: IBeat;       // beat, chord
+    let overlay: boolean = true;
+
+    // Force to update value completely
+    useEffect(() => {
+        refs.current.timePos = timePos;
+    }, [timePos]);
+    useEffect(() => {
+        refs.current.beatPos = beatPos;
+    }, [beatPos]);
+    useEffect(() => {
+        refs.current.masterVolume = masterVolume;
+    }, [masterVolume]);
 
     player.addListener({
         /* when the API is loaded */
-        onAppReady: (app) => {
+        onAppReady: (app: IPlayerApp) => {
             if (!app.managed) { // If load music first time, Add music here
                 // アリフレーション / 雨良 Amala
                 player.createFromSongUrl("https://piapro.jp/t/SuQO/20250127235813", {
@@ -22,56 +57,78 @@ const TextAlive = ({ player, isPlaying, setIsPlaying, setTimePos }) => {
             }
         },
 
-        onAppMediaChange: (mediaUrl) => {
+        onAppMediaChange: (mediaUrl: string) => {
             console.log("New music is set:", mediaUrl);
         },
         onPlay: () => {
             console.log("Music play");
+            const popup = document.getElementById("popup")
+            if (popup) {
+                if (overlay)
+                    overlay = false;
+                else
+                    popup.style.display = 'none'; // When play, not show popup
+            }
         },
         onPause: () => {
             console.log("Music paused");
+            setMasterVolume(0);
         },
         onStop: () => {
             console.log("Music stopped");
+            setTimePos(0);
+            setBeatPos(0);
+            setMasterVolume(0);
         },
-        onMediaSeek: (position) => {
+        onMediaSeek: (position: number) => {
             //console.log("Music timeline moved to:", position, "ms");
+
+
+            const beat = player.findBeat(position);
+            //console.log("Seek pos: ", position);
+            const beatIndex = beat.index + (position - beat.startTime) / (beat.endTime - beat.startTime)   // add remaining position to beat pos
+            //console.log("Beat index: ", beat.index + delta);
             setTimePos(position);
+            setBeatPos(beatIndex);                     // Update beat here
+            // No update track left and right here
         },
         /*Get current beat information */
-        onTimeUpdate: (position) => {   // position: Music time position
-            //console.log("Music time position:", position, "ms");
-            setTimePos(position);
-        },
-        //onThrottledTimeUpdate: (position) => {
-        //    console.log("Music time position:", position, "ms");
-        //    setTimePos(position);
+        //onThrottledTimeUpdate: (position) => {   // position: Music time position
+
         //},
-        onVideoReady: (v) => {
-            if (v.firstChar) {   // If have lyrics
-                console.log(v.firstPhrase.toString());      // Print the whole sentence: 取って付けたような
-                console.log(v.firstPhrase.next.toString()); // Print next sentence.
+        onTimeUpdate: (position: number) => {  // position: Music time position
+            //console.log("repeat: ", refs.current.repeat);
+            if (position > 232000) {            // end of song, not to overflow
+                player.requestStop();
+            }
+
+            const beat = player.findBeat(position);
+            if (b !== beat) {           // if b change
+                if (beat) {
+                    const beatIndex = beat.index + (position - beat.startTime) / (beat.endTime - beat.startTime)   // add remaining position to beat pos
+                    if (refs.current.repeat && refs.current.beatLeftPos !== refs.current.beatRightPos && (
+                        beatIndex > refs.current.beatRightPos || beatIndex < refs.current.beatLeftPos
+                    )) {         // If set range and current position is higher than the loop (at right), return to start of the loop
+                        player.requestMediaSeek(refs.current.leftTime);
+                    }
+                    else {
+                        console.log("Beat index: ", beat.index);
+                        console.log("Music time position:", position, "ms");
+                        setTimePos(position);
+                        setBeatPos(beatIndex);                     // Update beat here
+                    }
+                }
+                b = beat;
             }
         },
-        onTextLoad: (text) => {
-            console.log("Load: ", text);
-            //document.querySelector("#lyrics").textContent = text;
-        },
+        //onVideoReady: (v) => {
+        //    if (v.firstChar) {   // If have lyrics
 
-        ///* when the API is loaded */
-        //onAppReady(app) {
-        //    if (!app.managed) { // Add music here
-        //        // アリフレーション / 雨良 Amala
-        //        player.createFromSongUrl("https://piapro.jp/t/SuQO/20250127235813", {
-        //            video: {
-        //                beatId: 4694276,
-        //                chordId: 2830731,
-        //                repetitiveSegmentId: 2946479,
-        //                lyricId: 67811,
-        //                lyricDiffId: 20655
-        //            },
-        //        });
         //    }
+        //},
+        //onTextLoad: (text) => {
+        //    //console.log("Load: ", text);
+        //    //document.querySelector("#lyrics").textContent = text;
         //},
 
         ///* The code activated when change music */
@@ -87,53 +144,16 @@ const TextAlive = ({ player, isPlaying, setIsPlaying, setTimePos }) => {
         /* The code activated when the media controller is ready */
         /* Called when Timer is ready for playback */
         onTimerReady() {
-            if (!isPlaying) {                    // ensure play 1 time
+            if (!refs.current.isPlaying) {                    // ensure play 1 time
                 console.log("Timer ready");
-                //setIsPlaying(true);
-                //player.requestPlay();   // Touch anywhere in the screen to play
+                const overlay = document.getElementById("overlay")
+                if (overlay)
+                    overlay.style.display = 'none'; // Loaded
             }
             else {
                 console.log("Stop excessing play");
             }
         },
-
-        ///* Get current beat information */
-        //onTimeUpdate(position) {
-        //    // 現在のビート情報を取得
-        //    let beat = player.findBeat(position);
-        //    if (b !== beat) {
-        //        if (beat) {
-        //            requestAnimationFrame(() => {
-        //                bar.className = "active";
-        //                requestAnimationFrame(() => {
-        //                    bar.className = "active beat";
-        //                });
-        //            });
-        //        }
-        //        b = beat;
-        //    }
-
-        //    // 歌詞情報がなければこれで処理を終わる
-        //    if (!player.video.firstChar) {
-        //        return;
-        //    }
-
-        //    // 巻き戻っていたら歌詞表示をリセットする
-        //    if (c && c.startTime > position + 1000) {
-        //        resetChars();
-        //    }
-
-        //    // 500ms先に発声される文字を取得
-        //    let current = c || player.video.firstChar;
-        //    while (current && current.startTime < position + 500) {
-        //        // 新しい文字が発声されようとしている
-        //        if (c !== current) {
-        //            newChar(current);
-        //            c = current;
-        //        }
-        //        current = current.next;
-        //    }
-        //},
 
         ///* When music play */
         //onPlay() {
@@ -145,65 +165,9 @@ const TextAlive = ({ player, isPlaying, setIsPlaying, setTimePos }) => {
         //}
     });
 
-    /**
-     * 新しい文字の発声時に呼ばれる
-     * Called when a new character is being vocalized
-     */
-    function newChar(current) {
-        // 品詞 (part-of-speech)
-        // https://developer.textalive.jp/packages/textalive-app-api/interfaces/iword.html#pos
-        const classes = [];
-        if (
-            current.parent.pos === "N" ||
-            current.parent.pos === "PN" ||
-            current.parent.pos === "X"
-        ) {
-            classes.push("noun");
-        }
-
-        // フレーズの最後の文字か否か
-        if (current.parent.parent.lastChar === current) {
-            classes.push("lastChar");
-        }
-
-        // 英単語の最初か最後の文字か否か
-        if (current.parent.language === "en") {
-            if (current.parent.lastChar === current) {
-                classes.push("lastCharInEnglishWord");
-            } else if (current.parent.firstChar === current) {
-                classes.push("firstCharInEnglishWord");
-            }
-        }
-
-        // noun, lastChar クラスを必要に応じて追加
-        const div = document.createElement("div");
-        div.appendChild(document.createTextNode(current.text));
-
-        // 文字を画面上に追加
-        const container = document.createElement("div");
-        container.className = classes.join(" ");
-        container.appendChild(div);
-        container.addEventListener("click", () => {
-            player.requestMediaSeek(current.startTime);
-        });
-        textContainer.appendChild(container);
-    }
-
-    /**
-     * 歌詞表示をリセットする
-     * Reset lyrics view
-     */
-    function resetChars() {
-        c = null;
-        while (textContainer.firstChild)
-            textContainer.removeChild(textContainer.firstChild);
-    }
-
-    //return (
-    //    <div id="lyrics"
-    //        style={style}
-    //    ></div>     // return text container
-    //);
+    return (
+        <div></div>     // return text container
+    );
 }
 
 export default TextAlive;

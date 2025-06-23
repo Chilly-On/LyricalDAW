@@ -1,12 +1,12 @@
-/// <reference path="../footer/record.tsx" />
-import React from "react";
-import { useMemo, useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
+import { Player } from "textalive-app-api";
 import Track_gen from "./track-gen";
 import Track_grid from "./track-grid";
+//import fileTracks from "../../Data/fileTracks";
 
-const getTrackCount = (tracks) => {
+const getTrackCount = (tracks: TrackFile[]) => {
     let count = 0;
-    const traverse = (items) => {
+    const traverse = (items: TrackFile[]) => {
         for (const item of items) {
             if (item.tracks && item.open) {
                 count += 1;             // count for file
@@ -20,25 +20,18 @@ const getTrackCount = (tracks) => {
     return count;
 };
 
+interface TrackFile {
+    id?: number;                 // Optional, since top-level tracks don't have it
+    name: string;
+    icon: string;
+    color: string;
+    borderTop?: number;
+    open?: boolean;
+    tracks?: TrackFile[];           // Recursive children
+}
 
-const Track = ({ isPlaying, setIsPlaying }) => {
-    const timeSteps = 50;
-
-    const renderTrack = (track, level = 0) => (
-        <Track_gen
-            key={track.id}
-            id={track.id}
-            name={track.name}
-            color={track.color}
-            icon={track.icon}
-            borderTop={track.borderTop}
-            level={level}
-        >
-            {track.tracks?.map((subTrack) => renderTrack(subTrack, level + 1))}
-        </Track_gen>
-    );
-
-    const fileTracks = [
+const fileTrackFunc = () => {
+    const fileTracks: TrackFile[] = [
         {
             name: "File closed",
             icon: "Track/file.png",
@@ -101,7 +94,7 @@ const Track = ({ isPlaying, setIsPlaying }) => {
                         },
                         {
                             id: 8,
-                            name: "Sample",
+                            name: "A very long name track to test overflow",
                             color: "#b1bbca",
                             icon: "Track/sample.png"
                         }
@@ -109,7 +102,7 @@ const Track = ({ isPlaying, setIsPlaying }) => {
                 }
             ]
         },
-/*        {
+        {
             id: 9,
             name: "Piano 2",
             icon: "Track/piano.png",
@@ -121,220 +114,323 @@ const Track = ({ isPlaying, setIsPlaying }) => {
             icon: "Track/piano.png",
             color: "#41dfe2"
         },
-        {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        },
-        {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        },
-        {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        },
-        {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        },
-        {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        }, {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        },
-        {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        },
-        {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        },
-        {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        },
-        {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        },
-        {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        },
-        {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        },
-        {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        },
-        {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        },
-        {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        },
-        {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        },
-        {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        }, {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        }, {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        }, {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        }, {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        }, {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        }, {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        }, {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        }, {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        }, {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        }, {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        }, {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        }, {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        }, {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        }, {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        }, {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        }, */{
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        }
+        //{
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //},
+        //{
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //},
+        //{
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //},
+        //{
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //},
+        //{
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //}, {
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //},
+        //{
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //},
+        //{
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //},
+        //{
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //},
+        //{
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //},
+        //{
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //},
+        //{
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //},
+        //{
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //},
+        //{
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //},
+        //{
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //},
+        //{
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //},
+        //{
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //}, {
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //}, {
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //}, {
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //}, {
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //}, {
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //}, {
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //}, {
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //}, {
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //}, {
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //}, {
+        //    id: 9,
+        //    name: "Piano 2",
+        //    icon: "Track/piano.png",
+        //    color: "#dff155"
+        //}
     ];
+    return fileTracks;
+};
+const gridDataFunc = () => {
+    const gridData = [["#dff155", "#dff155", "", "", "", "", "", "#dff155", "#dff155", "#dff155", "#dff155"], // "" means blank
+    ["", "", "", "", "", "", "", "#dff155", "#dff155", "#dff155", "#dff155"],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ["", "", "", "", "", "", "", "", "", "", ""],
+    ];
+    return gridData;
+};
+
+type PlayerRefs = {
+    timePos: number,
+    beatPos: number,
+    isPlaying: boolean;
+    repeat: boolean;
+    beatLeftPos: number;
+    beatRightPos: number;
+    leftTime: number;
+};
+interface TrackProps {       // for input parameters
+    player: Player,
+    isPlaying: boolean,
+    timePos: number,
+    setTimePos: (n: number) => void,
+    beatPos: number,
+    setBeatPos: (n: number) => void,
+    beatLeftPos: number,
+    setBeatLeftPos: (n: number) => void,
+    beatRightPos: number,
+    setBeatRightPos: (n: number) => void,
+    leftTime: number,
+    setLeftTime: (n: number) => void,
+    refs: React.RefObject<PlayerRefs>;
+}
+
+
+const Track: React.FC<TrackProps> = ({ player, isPlaying, timePos, setTimePos, beatPos, setBeatPos, beatLeftPos, setBeatLeftPos, beatRightPos, setBeatRightPos, leftTime, setLeftTime, refs }) => {
+    // Initialize track grid length here
+    //const timeSteps = player.data.song.length * 4;          // change 4/4 or 3/4 here
+    const timeSteps = 125 * 4 + 2;          // change 4/4 or 3/4 here
+    const initialTimeWidth = 30;
+    const [timeWidth] = useState(initialTimeWidth);
+
+    const fileTracks = fileTrackFunc();
+    const gridData = gridDataFunc();
+
+    const [trackVolume, setTrackVolume] = useState(Array(30).fill(0));      // create 30 array of track volume
+
+    let trackNo = -1;               // for add trackNo++ to become 0
+    const renderTrack = (track: TrackFile, level = 0) => {
+        trackNo++;                  // advance 1 layer
+        return (
+            <Track_gen
+                beatPos={beatPos}
+                rowGridData={gridData[trackNo]}// one row only for that track }
+                key={track.id}
+                id={track.id}
+                name={track.name}
+                color={track.color}
+                icon={track.icon}
+                borderTop={track.borderTop}
+                level={level}
+                trackNo={trackNo}
+                trackVolume={trackVolume}
+                setTrackVolume={setTrackVolume}
+                refs={refs}
+            >
+                {track.tracks?.map((subTrack) => renderTrack(subTrack, level + 1))}
+            </Track_gen>
+        )
+    };
+
     // const trackCount = useMemo(() => getTrackCount(fileTracks), [fileTracks]);
+    
+    // TODO LATER
 
     // For auto-scroll
-    const scrollRef = useRef(null);
+    const scrollRef = useRef<HTMLDivElement>(null);
 
-    // Scroll effect for isPlaying
+    //// Scroll effect for isPlaying
+
     useEffect(() => {
-        let animationFrameId;
+        const container = scrollRef.current;
+        if (!container || !refs.current.isPlaying || beatPos < 12) return;
 
-        const scrollStep = () => {
-            const container = scrollRef.current;
-            if (container) {
-                container.scrollLeft += 2; // Adjust scroll speed
-                animationFrameId = requestAnimationFrame(scrollStep);
-            }
-        };
+        const beatWidth = timeWidth + 1.2; // or whatever you use per beat
+        const targetScrollX = beatPos * beatWidth - container.clientWidth / 2;
 
-        if (isPlaying) {
-            animationFrameId = requestAnimationFrame(scrollStep);
-        }
+        // Smooth scroll to center the pointer
+        container.scrollTo({
+            left: targetScrollX
+        });
+    }, [beatPos, isPlaying]);
 
-        return () => cancelAnimationFrame(animationFrameId);
-    }, [isPlaying]);
+    // Calculate the pointer position in the grid
+    const calcPointerPos = (beat: number) => {
+        return beat * timeWidth;
+    }
+    // Calculate the width of selection range in the grid
+    const calcSelectedRange = (r1: number, r2: number) => {
+        return (r2 - r1) * timeWidth;
+    }
 
     // Timeline pointer should claim all of track grid:
     const timelineHeight = 25 + 20 * getTrackCount(fileTracks);
+
+    // Force to update value completely
+    useEffect(() => {
+        refs.current.timePos = timePos;
+    }, [timePos]);
+    useEffect(() => {
+        refs.current.beatPos = beatPos;
+    }, [beatPos]);
+    useEffect(() => {
+        refs.current.beatLeftPos = beatLeftPos;
+    }, [beatLeftPos]);
+    useEffect(() => {
+        refs.current.beatRightPos = beatRightPos;
+    }, [beatRightPos]);
+    useEffect(() => {
+        refs.current.leftTime = leftTime;
+    }, [leftTime]);
 
     return (
         <div className="d-flex flex-row"
             ref={scrollRef}
             style={{
-                backgroundColor: "#2f3135",
+                backgroundColor: "#2DA399",
                 border: "2.5px solid #f9f9fa",
                 borderRadius: "10px",
                 //height: timelineHeight,                 // change to dynamic to match the number of real tracks
@@ -343,8 +439,6 @@ const Track = ({ isPlaying, setIsPlaying }) => {
                 overflow: "auto"
             }}
         >
-
-
             <div className="d-flex flex-column align-items-center"
                 style={{
                 fontSize: "15px",
@@ -375,7 +469,7 @@ const Track = ({ isPlaying, setIsPlaying }) => {
                     <div className="d-flex flex-row"
                         style={{
                             height: "20px",
-                            backgroundColor: "#898e8c", // match with parent color
+                            backgroundColor: "#5FC3C7", // match with parent color
                             alignItems: "center",
                             border: "1px solid #70767a",
                             borderRadius: "10px"
@@ -420,10 +514,12 @@ const Track = ({ isPlaying, setIsPlaying }) => {
                         </button>
                     </div>
                     {/* Right part*/}
-                    <div className="d-flex flex-row align-items-center">
+                    <div className="d-flex flex-row align-items-center"
+                    >
                         <div className="d-flex flex-row"
                             style={{
                                 height: "20px",
+                                backgroundColor: "#004F52",
                                 alignItems: "center",
                                 justifyContent: "center",
                                 marginRight: "10px",
@@ -485,7 +581,7 @@ const Track = ({ isPlaying, setIsPlaying }) => {
                             style={{
                                 height: "20px",
                                 width: "30px",
-                                backgroundColor: "#898e8c",
+                                backgroundColor: "#5FC3C7",
                                 display: "flex",
                                 alignItems: "inherit",
                                 justifyContent: "center",
@@ -530,22 +626,46 @@ const Track = ({ isPlaying, setIsPlaying }) => {
                 {/* Timeline grid*/}
                 {/* Consider redesign timeline so that it maintains weight during zooming in or out*/}
                 <Track_grid
-                    //trackCount={trackCount}
+                    gridData={gridData}
+                    player={player}
                     timeSteps={timeSteps}
                     trackHeight={20}
-                    initialTimeWidth={30}
+                    initialTimeWidth={initialTimeWidth}
+                    timePos={timePos} setTimePos={setTimePos}
+                    beatPos={beatPos} setBeatPos={setBeatPos}
+                    beatLeftPos={beatLeftPos} setBeatLeftPos={setBeatLeftPos}
+                    beatRightPos={beatRightPos} setBeatRightPos={setBeatRightPos}
+                    leftTime={leftTime} setLeftTime={setLeftTime}
+                    refs={refs}
                 />
                 {/* Timeline pointer*/}
+                {/* Can hide this in deploy, as well as the scroll is correct (pointer should be on screen) */}
                 <div
                     style={{
-                        width: "5px",
+                        width: "3px",
                         height: timelineHeight,         // change to dynamic to match the number of girds (real tracks)
                         backgroundColor: "black", // green color
                         position: "absolute",
                         top: 0,
-                        left: 30,               // Adjust timeline pointer's position here
+                        left: calcPointerPos(beatPos),               // Adjust timeline pointer's position here
                         alignItems: "center",
-                        borderWidth: "0px"
+                        borderWidth: "0px",
+                        pointerEvents: "none",           // click though
+                    }}
+                />
+                {/* Range pointer */}
+                <div
+                    style={{
+                        display: refs.current.beatLeftPos !== refs.current.beatRightPos ? "block" : "none",     // Only display when set range 
+                        width: `${calcSelectedRange(refs.current.beatLeftPos, refs.current.beatRightPos)}px`,
+                        height: timelineHeight,         // Change to dynamic to match the number of girds (real tracks)
+                        backgroundColor: refs.current.repeat ? "#8f83f280" : "#70767a80", // Change color when repeat
+                        position: "absolute",
+                        top: 0,
+                        left: calcPointerPos(refs.current.beatLeftPos),               // Adjust timeline pointer's position here
+                        alignItems: "center",
+                        borderWidth: "0px",
+                        pointerEvents: "none",           // click though
                     }}
                 />
             </div>

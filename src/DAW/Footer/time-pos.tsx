@@ -8,18 +8,30 @@ const formatTime = (ms: number): string => {
         .toString()
         .padStart(2, '0')}.${milliseconds.toString().padStart(3, '0')}`;
 };
+type PlayerRefs = {
+    timePos: number,
+    beatPos: number,
+    isPlaying: boolean;
+    repeat: boolean;
+    beatLeftPos: number;
+    beatRightPos: number;
+    leftTime: number;
+};
+interface TimePosProps {       // for input parameters
+    refs: React.RefObject<PlayerRefs>;
+}
 
-const Time_pos = ({ timePos } ) => {
+const Time_pos: React.FC<TimePosProps> = ({ refs } ) => {
     return (
         <div className="flex-row align-items-center justify-content-center"
             style={{
                 width: "150px",
                 height: "25px",
-                backgroundColor: "black",
+                backgroundColor: "#004F52",
                 marginRight: "10px",
                 gap: "0px", // ensure no spacing
                 border: "3px solid #70767a",
-                borderRadius: "10px"
+                borderRadius: "5px"
             }}
         >
             <div className="justify-content-center align-items-center"
@@ -51,7 +63,7 @@ const Time_pos = ({ timePos } ) => {
                     borderBottomRightRadius: "5px",
                     borderLeft: "3px solid #70767a"
                 }}
-            >{formatTime(timePos)}
+            >{formatTime(refs.current.timePos)}
             </div>
         </div>
     );

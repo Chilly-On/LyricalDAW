@@ -24,13 +24,13 @@ const Bpm = () => {
                 style={{
                     width: "80px",
                     height: "25px",
-                    backgroundColor: "black",
+                    backgroundColor: "#004F52",
                     marginRight: "10px",
                     gap: "0px", // ensure no spacing
                     border: "3px solid #70767a",
                     borderLeft: "0px",
-                    borderTopRightRadius: "10px",
-                    borderBottomRightRadius: "10px"
+                    borderTopRightRadius: "5px",
+                    borderBottomRightRadius: "5px"
                 }}
             >
                 <div className="justify-content-center text-end"
@@ -42,7 +42,7 @@ const Bpm = () => {
                         borderTopRightRadius: "5px",
                         borderBottomRightRadius: "5px"
                     }}
-                >  132.000
+                >  130.000
                 </div>
                 <div className="align-item-center justify-content-center"
                     style={{

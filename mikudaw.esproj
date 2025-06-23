@@ -15,6 +15,7 @@
     <TypeScriptConfiguration Remove="src\DAW\Footer - Copy\**" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="src\components\" />
+    <Folder Include="private\components\" />
+    <Folder Include="src\Data\" />
   </ItemGroup>
 </Project>

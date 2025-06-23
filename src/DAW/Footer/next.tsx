@@ -4,7 +4,7 @@ const Play = () => {
             style={{
                 width: "40px",
                 height: "30px",
-                backgroundColor: "#70767a", // green color
+                backgroundColor: "#5FC3C7", // green color
                 display: "flex",
                 alignItems: "inherit",
                 justifyContent: "inherit",

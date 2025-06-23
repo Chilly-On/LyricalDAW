@@ -1,11 +1,27 @@
-const Play = ({ onPlay, isPlaying }) => {
+type PlayerRefs = {
+    timePos: number,
+    beatPos: number,
+    isPlaying: boolean;
+    repeat: boolean;
+    beatLeftPos: number;
+    beatRightPos: number;
+    leftTime: number;
+};
+
+interface StopProps {       // for input parameters
+    refs: React.RefObject<PlayerRefs>;
+    onPlay: () => void;
+}
+
+
+const Stop: React.FC<StopProps> = ({ refs, onPlay }) => {
     return (
         <button
             onClick={onPlay}
             style={{
                 width: "40px",
                 height: "30px",
-                backgroundColor: isPlaying ? "#70767a" : "#a2a9ac", // set to inherit when play
+                backgroundColor: refs.current.isPlaying ? "#5FC3C7" : "#45F8E8", // set to inherit when play
                 display: "flex",
                 alignItems: "inherit",
                 justifyContent: "inherit",
@@ -21,4 +37,4 @@ const Play = ({ onPlay, isPlaying }) => {
     );
 };
 
-export default Play;
+export default Stop;

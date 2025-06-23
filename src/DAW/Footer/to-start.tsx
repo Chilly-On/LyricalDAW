@@ -1,10 +1,15 @@
-const Play = () => {
+interface ToStartProps {       // for input parameters
+    onPlay: () => void;
+}
+
+const To_start: React.FC<ToStartProps> = ({ onPlay }) => {
     return (
         <button
+            onClick={onPlay}
             style={{
                 width: "40px",
                 height: "30px",
-                backgroundColor: "#70767a", // green color
+                backgroundColor: "#5FC3C7", // green color
                 display: "flex",
                 alignItems: "inherit",
                 justifyContent: "inherit",
@@ -24,4 +29,4 @@ const Play = () => {
     );
 };
 
-export default Play;
+export default To_start;

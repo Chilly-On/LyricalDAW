@@ -1,14 +1,39 @@
-const Track_left = () => {
+const formatBeat = (beat: number): string => {
+    const index = Math.floor(beat / 4) + 1;      // first beat index is 1
+    const fullBeat = Math.floor(beat % 4);
+    const quarterBeat = Math.floor(beat * 4 % 4);
+    const microBeat = Math.floor(beat * 1024 % 256);
+
+    return `${index.toString()}.   ${fullBeat.toString()}.   ${quarterBeat.toString()}.
+    ${microBeat.toString().padStart(3, '0')}.`;
+}
+
+type PlayerRefs = {
+    timePos: number,
+    beatPos: number,
+    isPlaying: boolean;
+    repeat: boolean;
+    beatLeftPos: number;
+    beatRightPos: number;
+    leftTime: number;
+};
+
+interface TrackLeftProps {       // for input parameters
+    refs: React.RefObject<PlayerRefs>;
+}
+
+
+const Track_left: React.FC<TrackLeftProps>  = ({ refs }) => {
     return (
         <div className="flex-row align-items-center justify-content-center"
             style={{
                 width: "150px",
                 height: "25px",
-                backgroundColor: "black",
+                backgroundColor: "#004F52",
                 marginRight: "10px",
                 gap: "0px", // ensure no spacing
                 border: "3px solid #70767a",
-                borderRadius: "10px"
+                borderRadius: "5px"
             }}
         >
             <div className="justify-content-center align-items-center"
@@ -40,7 +65,7 @@ const Track_left = () => {
                     borderBottomRightRadius: "5px",
                     borderLeft: "3px solid #70767a"
                 }}
-            >  0.   0.   0.   0.
+            >  {formatBeat(refs.current.beatLeftPos)}
             </div>
         </div>
     );

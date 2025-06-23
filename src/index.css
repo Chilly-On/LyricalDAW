@@ -72,7 +72,7 @@ header {
     /*padding: 20px;*/
     width: 100%;
     /*background-color: #f5d930cc;*/
-    background-image: url(image/background.png);
+    /*background-image: url(image/background.png);*/
     align-self: center;
     align-content: center;
     display: flex;
@@ -176,7 +176,7 @@ header {
     }
 /* Footer Styles */
 footer {
-    background-color: #2f3135;
+    background-color: #2DA399;
     /*color: #292929;*/
     color: white;
     text-align: center;
@@ -420,16 +420,16 @@ form {
     .right-menu {
         display: none !important;
     }
-    /* main {
+    main {
         height: calc(100vh - 90px) !important;
-    }*/
+    }
 }
 main {
     height: calc(100vh - 30px);
     width: 100%;
     /*padding: 20px;*/
     color: white;
-    background-color: black;
+    background-color: #9DDADC;
     border: 50px;
     border-color: #fd8818;
     align-self: center;
@@ -484,5 +484,9 @@ main {
     border-bottom-right-radius: 5px;
     border-top-right-radius: 5px;
     color: white;
+    font-size: 10px;
+}
+.ruler {
+    height: 12px;
     font-size: 10px;
 }

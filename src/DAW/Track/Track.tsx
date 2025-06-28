@@ -1,8 +1,11 @@
-import { useRef, useEffect, useState } from "react";
+﻿import { useRef, useEffect, useState } from "react";
 import { Player } from "textalive-app-api";
 import Track_gen from "./track-gen";
 import Track_grid from "./track-grid";
-//import fileTracks from "../../Data/fileTracks";
+import fileTracks from "../../Data/fileTracks";
+import gridData from "../../Data/gridData";
+import Timeline_pointer from "./timeline-pointer";
+import Range_pointer from "./range-pointer";
 
 const getTrackCount = (tracks: TrackFile[]) => {
     let count = 0;
@@ -19,9 +22,8 @@ const getTrackCount = (tracks: TrackFile[]) => {
     traverse(tracks);
     return count;
 };
-
 interface TrackFile {
-    id?: number;                 // Optional, since top-level tracks don't have it
+    type: "piano" | "sample" | "fx" | "file";
     name: string;
     icon: string;
     color: string;
@@ -30,288 +32,6 @@ interface TrackFile {
     tracks?: TrackFile[];           // Recursive children
 }
 
-const fileTrackFunc = () => {
-    const fileTracks: TrackFile[] = [
-        {
-            name: "File closed",
-            icon: "Track/file.png",
-            color: "#e6357a",
-            borderTop: 1
-        },
-        {
-            name: "File opened",
-            icon: "Track/file-open.png",
-            color: "#b167ff",
-            open: true,
-            tracks: [
-                {
-                    id: 1,
-                    name: "Harmony",
-                    color: "#f5c848",
-                    icon: "Track/harmony.png"
-                },
-                {
-                    id: 2,
-                    name: "Mixing",
-                    color: "#41dfe2",
-                    icon: "Track/mix.png"
-                },
-                {
-                    id: 3,
-                    name: "Piano",
-                    color: "#dff155",
-                    icon: "Track/piano.png"
-                },
-                {
-                    id: 4,
-                    name: "Sample",
-                    color: "#b1bbca",
-                    icon: "Track/sample.png"
-                },
-                {
-                    name: "Nested File",
-                    icon: "Track/file-open.png",
-                    color: "#b167ff",
-                    open: true,
-                    tracks: [
-                        {
-                            id: 5,
-                            name: "Harmony",
-                            color: "#f5c848",
-                            icon: "Track/harmony.png"
-                        },
-                        {
-                            id: 6,
-                            name: "Mixing",
-                            color: "#41dfe2",
-                            icon: "Track/mix.png"
-                        },
-                        {
-                            id: 7,
-                            name: "Piano",
-                            color: "#dff155",
-                            icon: "Track/piano.png"
-                        },
-                        {
-                            id: 8,
-                            name: "A very long name track to test overflow",
-                            color: "#b1bbca",
-                            icon: "Track/sample.png"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            id: 9,
-            name: "Piano 2",
-            icon: "Track/piano.png",
-            color: "#dff155"
-        },
-        {
-            id: 10,
-            name: "A very long name track to test overflow",
-            icon: "Track/piano.png",
-            color: "#41dfe2"
-        },
-        //{
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //},
-        //{
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //},
-        //{
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //},
-        //{
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //},
-        //{
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //}, {
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //},
-        //{
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //},
-        //{
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //},
-        //{
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //},
-        //{
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //},
-        //{
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //},
-        //{
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //},
-        //{
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //},
-        //{
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //},
-        //{
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //},
-        //{
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //},
-        //{
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //}, {
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //}, {
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //}, {
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //}, {
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //}, {
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //}, {
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //}, {
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //}, {
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //}, {
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //}, {
-        //    id: 9,
-        //    name: "Piano 2",
-        //    icon: "Track/piano.png",
-        //    color: "#dff155"
-        //}
-    ];
-    return fileTracks;
-};
-const gridDataFunc = () => {
-    const gridData = [["#dff155", "#dff155", "", "", "", "", "", "#dff155", "#dff155", "#dff155", "#dff155"], // "" means blank
-    ["", "", "", "", "", "", "", "#dff155", "#dff155", "#dff155", "#dff155"],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ["", "", "", "", "", "", "", "", "", "", ""],
-    ];
-    return gridData;
-};
 
 type PlayerRefs = {
     timePos: number,
@@ -323,6 +43,7 @@ type PlayerRefs = {
     leftTime: number;
 };
 interface TrackProps {       // for input parameters
+    musicDelay: number,
     player: Player,
     isPlaying: boolean,
     timePos: number,
@@ -339,27 +60,30 @@ interface TrackProps {       // for input parameters
 }
 
 
-const Track: React.FC<TrackProps> = ({ player, isPlaying, timePos, setTimePos, beatPos, setBeatPos, beatLeftPos, setBeatLeftPos, beatRightPos, setBeatRightPos, leftTime, setLeftTime, refs }) => {
+const Track: React.FC<TrackProps> = ({ musicDelay, player, isPlaying, timePos, setTimePos, beatPos, setBeatPos, beatLeftPos, setBeatLeftPos, beatRightPos, setBeatRightPos, leftTime, setLeftTime, refs }) => {
     // Initialize track grid length here
     //const timeSteps = player.data.song.length * 4;          // change 4/4 or 3/4 here
-    const timeSteps = 125 * 4 + 2;          // change 4/4 or 3/4 here
+    const timeSteps = 125 * 4 + 2;          // change 4/4 or 3/4 here; grid is quarterBeat
     const initialTimeWidth = 30;
     const [timeWidth] = useState(initialTimeWidth);
 
-    const fileTracks = fileTrackFunc();
-    const gridData = gridDataFunc();
+    const [trackVolume, setTrackVolume] = useState(Array(125).fill(0));      // create 30 array of track volume
 
-    const [trackVolume, setTrackVolume] = useState(Array(30).fill(0));      // create 30 array of track volume
-
-    let trackNo = -1;               // for add trackNo++ to become 0
+    let trackNo = -1;               // For add trackNo++ to become 0
+    let trackID = 1;               // To automatically assign ID
     const renderTrack = (track: TrackFile, level = 0) => {
         trackNo++;                  // advance 1 layer
+        let writeID = "";
+        if (track.type !== "file") {
+            writeID = trackID.toString();
+            trackID++;
+        }
         return (
             <Track_gen
                 beatPos={beatPos}
                 rowGridData={gridData[trackNo]}// one row only for that track }
-                key={track.id}
-                id={track.id}
+                key={trackNo}
+                id={writeID}
                 name={track.name}
                 color={track.color}
                 icon={track.icon}
@@ -396,15 +120,6 @@ const Track: React.FC<TrackProps> = ({ player, isPlaying, timePos, setTimePos, b
             left: targetScrollX
         });
     }, [beatPos, isPlaying]);
-
-    // Calculate the pointer position in the grid
-    const calcPointerPos = (beat: number) => {
-        return beat * timeWidth;
-    }
-    // Calculate the width of selection range in the grid
-    const calcSelectedRange = (r1: number, r2: number) => {
-        return (r2 - r1) * timeWidth;
-    }
 
     // Timeline pointer should claim all of track grid:
     const timelineHeight = 25 + 20 * getTrackCount(fileTracks);
@@ -443,14 +158,14 @@ const Track: React.FC<TrackProps> = ({ player, isPlaying, timePos, setTimePos, b
                 style={{
                 fontSize: "15px",
                 width: "300px",
-                height: "100%",         // pending auto
+                height: timelineHeight,         // pending auto
                 backgroundColor: "inherit",
                 position: "sticky",
                 left: 0,
                 borderWidth: "0px",
                 paddingLeft: "5px",
                 borderTopLeftRadius: "10px",
-                borderBottomLeftRadius: "10px",
+                    //borderBottomLeftRadius: "10px",
                 zIndex: 3
             }}>
                 {/* Track setting*/}
@@ -463,7 +178,8 @@ const Track: React.FC<TrackProps> = ({ player, isPlaying, timePos, setTimePos, b
                         backgroundColor: "inherit",
                         padding: "10px",
                         borderRight: "1px solid #70767a",
-                        borderBottom: "1px solid #70767a"
+                        borderBottom: "1px solid #70767a",
+                        zIndex: 3
                     }}>
                     {/* Left part*/}
                     <div className="d-flex flex-row"
@@ -535,7 +251,7 @@ const Track: React.FC<TrackProps> = ({ player, isPlaying, timePos, setTimePos, b
                                     textAlign: "right",
                                     marginRight: "10px"
                                 }}>
-                                0/0
+                                126/126
                             </div>
                             <button
                                 style={{
@@ -605,8 +321,9 @@ const Track: React.FC<TrackProps> = ({ player, isPlaying, timePos, setTimePos, b
                 */}
                 <div className="d-flex flex-column"
                     style={{
-                        backgroundColor: "inherit"
-                    } }
+                        backgroundColor: "inherit",
+                        zIndex: 2
+                    }}
                 >
                     {/*  Add track header here*/}
                     {fileTracks.map((track) => renderTrack(track))}
@@ -619,13 +336,13 @@ const Track: React.FC<TrackProps> = ({ player, isPlaying, timePos, setTimePos, b
             */}
             <div
                 style={{
-                    height: "100%",
-                    position: "relative"
+                    height: timelineHeight,
+                    position: "relative",
                 }}
             >
                 {/* Timeline grid*/}
                 {/* Consider redesign timeline so that it maintains weight during zooming in or out*/}
-                <Track_grid
+                <Track_grid musicDelay={musicDelay}
                     gridData={gridData}
                     player={player}
                     timeSteps={timeSteps}
@@ -640,34 +357,19 @@ const Track: React.FC<TrackProps> = ({ player, isPlaying, timePos, setTimePos, b
                 />
                 {/* Timeline pointer*/}
                 {/* Can hide this in deploy, as well as the scroll is correct (pointer should be on screen) */}
-                <div
-                    style={{
-                        width: "3px",
-                        height: timelineHeight,         // change to dynamic to match the number of girds (real tracks)
-                        backgroundColor: "black", // green color
-                        position: "absolute",
-                        top: 0,
-                        left: calcPointerPos(beatPos),               // Adjust timeline pointer's position here
-                        alignItems: "center",
-                        borderWidth: "0px",
-                        pointerEvents: "none",           // click though
-                    }}
+                <Timeline_pointer
+                //musicDelay={musicDelay}
+                    refs={refs}
+                    timelineHeight={timelineHeight}
+                    timeWidth={timeWidth}
                 />
                 {/* Range pointer */}
-                <div
-                    style={{
-                        display: refs.current.beatLeftPos !== refs.current.beatRightPos ? "block" : "none",     // Only display when set range 
-                        width: `${calcSelectedRange(refs.current.beatLeftPos, refs.current.beatRightPos)}px`,
-                        height: timelineHeight,         // Change to dynamic to match the number of girds (real tracks)
-                        backgroundColor: refs.current.repeat ? "#8f83f280" : "#70767a80", // Change color when repeat
-                        position: "absolute",
-                        top: 0,
-                        left: calcPointerPos(refs.current.beatLeftPos),               // Adjust timeline pointer's position here
-                        alignItems: "center",
-                        borderWidth: "0px",
-                        pointerEvents: "none",           // click though
-                    }}
-                />
+                <Range_pointer
+                    //musicDelay={musicDelay}
+                    refs={refs}
+                    timelineHeight={timelineHeight}
+                    beatPos={beatPos}
+                    timeWidth={timeWidth} />
             </div>
         </div>
     );

@@ -57,14 +57,20 @@ const Footer: React.FC<FooterProps> = ({ player, isPlaying, setIsPlaying, timePo
         }
     }
     const handlePlay = () => {
-        if (isPlaying) player.requestPause(); else player.requestPlay();
         setIsPlaying((prev: boolean) => !prev);
-        console.log("Music play");
+        if (isPlaying) {
+            player.requestPause();
+            console.log("Music pause");
+        }
+        else {
+            player.requestPlay();
+            console.log("Music play");
+        }
     }
     const handleStop = () => {
         setIsPlaying(false);
         player.requestPause();
-        console.log("Music stop");
+        console.log("Music pause");
     }
     const handleRepeat = () => {
         setRepeat((prev: boolean) => !prev); // Toggle the state
@@ -181,7 +187,8 @@ const Footer: React.FC<FooterProps> = ({ player, isPlaying, setIsPlaying, timePo
                         bottom: 20,
                         right: 0,
                         height: "100px",
-                        cursor: "pointer"
+                        cursor: "pointer",
+                        zIndex: 3
                 }} />
             </div>
             

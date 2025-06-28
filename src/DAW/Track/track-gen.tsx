@@ -1,4 +1,6 @@
-﻿import React, { useState, useEffect } from "react";
+﻿import React, { useState } from "react";
+import Track_Volume from "./track-volume"
+
 interface ChildWithLevelProps {
     level: number;
 }
@@ -46,43 +48,6 @@ const Track_gen: React.FC<TrackGenProps> = ({
     refs
 }) => { // add parameters
 
-    useEffect(() => {
-        // Update index i
-        const updateVolume = (i: number, newValue: number) => {
-            setTrackVolume(prev => {
-                const newArr = [...prev];
-                newArr[i] = newValue;
-                return newArr;
-            });
-        };
-
-        let animationId: number;
-
-        const update = () => {
-            // TOOO HERE
-            if (refs.current.isPlaying) {
-                const beat = Math.floor(refs.current.beatPos);
-                if (beat < rowGridData.length && rowGridData[beat] !== "") {
-                    updateVolume(trackNo, 1);   // if have track and play, make it active
-                    //console.log("rowGridData[beat]: ", rowGridData[beat]);
-                }
-                else if (beat > 0 && beat - 1 < rowGridData.length && rowGridData[beat - 1] !== "") {        // If after 1 beat of track
-                    const trackVolume = 1 - (refs.current.beatPos - beat);     // Fake volume for demonstartion, the farther position, the lower volume
-                    updateVolume(trackNo, trackVolume);   // if no square, mute track
-                }
-                else {
-                    updateVolume(trackNo, 0);   // if no square, mute track
-                }
-            }
-            else {
-                updateVolume(trackNo, 0);   // if no playing, mute track
-            }
-            animationId = requestAnimationFrame(update);
-        };
-
-        update();
-        return () => cancelAnimationFrame(animationId);
-    }, [rowGridData, trackNo, beatPos, trackVolume, setTrackVolume]);
 
     const isContainer = !!children;
     //const [expanded, setExpanded] = useState(true); // NEW: toggle children visibility
@@ -121,56 +86,30 @@ const Track_gen: React.FC<TrackGenProps> = ({
                                 }}
                             >
                                 <img src={icon} alt="Timeline" className="track-icon" />
-                                <div style={{ fontSize: "14px", color: "black" }}>{id}</div>
+                                <div
+                                    style={{
+                                    fontSize: "14px",
+                                    color: "black"
+                                }}>{id}</div>
                             </div>
                             <div className="d-flex flex-row fw-bold">
                                 <button className="mute-track">m</button>
                                 <button className="stop-track">s</button>
                             </div>
                             <div className="d-flex">
-                                {name}
+                                {level > 0 ? name.length <= 15 ? name : name.slice(0, 11).concat("...".concat(name.slice(-4))) // 15, Track text
+                                    : name.length <= 18 ? name : name.slice(0, 14).concat("...".concat(name.slice(-4)))   // 19
+                                }
                             </div>
                         </div>
-                        <div className="d-flex flex-row" style={{
-                            gap: "1px"
-                        }}>
-                            <div className="d-flex flex-column align-items-center"
-                                style={{
-                                    position: "relative",
-                                    width: "5px",
-                                    height: "18px",
-                                    backgroundColor: "black"
-                                }}
-                            >
-                                <div className="d-flex flex-column align-items-center"
-                                    style={{
-                                        position: "absolute",
-                                        bottom: 0,
-                                        width: "5px",
-                                        height: `${18 * trackVolume[trackNo]}px`,
-                                        backgroundColor: "#99f4e9"
-                                    }}
-                                />
-                            </div>
-                            <div className="d-flex flex-column align-items-center"
-                                style={{
-                                    position: "relative",
-                                    width: "5px",
-                                    height: "18px",
-                                    backgroundColor: "black"
-                                }}
-                            >
-                                <div className="d-flex flex-column align-items-center"
-                                    style={{
-                                        position: "absolute",
-                                        bottom: 0,
-                                        width: "5px",
-                                        height: `${18 * trackVolume[trackNo]}px`,
-                                        backgroundColor: "#99f4e9"
-                                    }}
-                                />
-                            </div>
-                        </div>
+                        <Track_Volume 
+                            rowGridData={rowGridData}
+                            beatPos={beatPos}
+                            trackNo={trackNo}
+                            trackVolume={trackVolume}
+                            setTrackVolume={setTrackVolume}
+                            refs={refs} // Pass refs
+                        />
                     </div>
 
                     {/* Children (conditionally rendered) */}
@@ -192,7 +131,7 @@ const Track_gen: React.FC<TrackGenProps> = ({
     // Normal (leaf) track
     const trackStyle: React.CSSProperties = {
         width,
-        paddingLeft: `${indent}px`, // NEW: align leaf like child tracks
+        paddingLeft: `${indent}px`, // Align leaf like child tracks
         ...(borderTop === 1 && { borderTop: "1px solid #737579" })
     };
 
@@ -214,7 +153,12 @@ const Track_gen: React.FC<TrackGenProps> = ({
                     }}
                 >
                     <img src={icon} alt="Timeline" className="track-icon" />
-                    <div style={{ fontSize: "14px", color: "black" }}>{id}</div>
+                    <div className="text-end"
+                        style={{            // Track ID
+                            fontSize: "14px",
+                            color: "black"
+                        }}>{id}
+                    </div>
                 </div>
 
                 <div className="d-flex flex-row fw-bold">
@@ -223,53 +167,21 @@ const Track_gen: React.FC<TrackGenProps> = ({
                 </div>
 
                 <div className="d-flex" style={{ borderWidth: "0px" }}>
-                    {level > 0 ? name.slice(0, 18).concat(name.length > 18 ? "..." : "")
-                        : name.slice(0, 21).concat(name.length > 21 ? "..." : "")
+                    {level > 0 ? name.length <= 15 ? name : name.slice(0, 11).concat("...".concat(name.slice(-4))) // 15, Track text
+                        : name.length <= 18 ? name : name.slice(0, 14).concat("...".concat(name.slice(-4)))   // 19
                 }
                 </div>
             </div>
 
             {/* Meter */}
-            <div className="d-flex flex-row"
-                style={{ gap: "1px" }}
-            >
-                <div className="d-flex flex-column align-items-center"
-                    style={{
-                        position: "relative",
-                        width: "5px",
-                        height: "18px",
-                        backgroundColor: "black"
-                    }}
-                >
-                    <div className="d-flex flex-column align-items-center"
-                        style={{
-                            position: "absolute",
-                            bottom: 0,
-                            width: "5px",
-                            height: `${18 * trackVolume[trackNo]}px`,
-                            backgroundColor: "#99f4e9"
-                        }}
-                    />
-                </div>
-                <div className="d-flex flex-column align-items-center"
-                    style={{
-                        position: "relative",
-                        width: "5px",
-                        height: "18px",
-                        backgroundColor: "black"
-                    }}
-                >
-                    <div className="d-flex flex-column align-items-center"
-                        style={{
-                            position: "absolute",
-                            bottom: 0,
-                            width: "5px",
-                            height: `${18 * trackVolume[trackNo]}px`,
-                            backgroundColor: "#99f4e9"
-                        }}
-                    />
-                </div>
-            </div>
+            <Track_Volume
+                rowGridData={rowGridData}
+                beatPos={beatPos}
+                trackNo={trackNo}
+                trackVolume={trackVolume}
+                setTrackVolume={setTrackVolume}
+                refs={refs} // Pass refs
+            />
         </div>
     );
 };

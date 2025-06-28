@@ -1,7 +1,7 @@
 const formatBeat = (beat: number): string => {
     const index = Math.floor(beat / 4) + 1;      // first beat index is 1
-    const fullBeat = Math.floor(beat % 4);
-    const quarterBeat = Math.floor(beat * 4 % 4);
+    const fullBeat = Math.floor(beat % 4) + 1;
+    const quarterBeat = Math.floor(beat * 4 % 4) + 1;
     const microBeat = Math.floor(beat * 1024 % 256);
 
     return `${index.toString()}.   ${fullBeat.toString()}.   ${quarterBeat.toString()}.

@@ -24,6 +24,7 @@ type PlayerRefs = {
     leftTime: number;
 };
 interface FooterProps {       // for input parameters
+    musicDelay: number,
     player: Player,
     isPlaying: boolean,
     setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>,
@@ -39,35 +40,68 @@ interface FooterProps {       // for input parameters
 }
 
 
-const Footer: React.FC<FooterProps> = ({ player, isPlaying, setIsPlaying, timePos, beatPos, beatLeftPos, setBeatLeftPos, beatRightPos, setBeatRightPos, repeat, setRepeat, refs }) => {
+const Footer: React.FC<FooterProps> = ({ musicDelay, player, isPlaying, setIsPlaying, timePos, beatPos, beatLeftPos, beatRightPos, repeat, refs }) => {
     const handleToStart = () => {
-        setBeatLeftPos(0);
-        setBeatRightPos(0);
-        player.requestMediaSeek(0)
+        refs.current.timePos = 0;
+        refs.current.beatPos = 0;
+        refs.current.beatLeftPos = 0;
+        refs.current.beatRightPos = 0;
+        player.requestMediaSeek(musicDelay);
+
         console.log("To start");
+        console.log("leftTime: ", refs.current.leftTime);
+        console.log("timePos: ", refs.current.timePos);
+
+        console.log("Real position after seek:", player.timer?.position);
+        if (!refs.current.isPlaying && player.timer?.position !== musicDelay) {     // If found unsync at pause
+            console.error("Time seeking failed due to the delay of music player. Stop and restart the music may solve the problem.");
+            player.volume = 0;  // Mute to wait for reloading
+            refs.current.timePos = musicDelay - 20; // Subtract the time for reloading
+            refs.current.beatPos = 0;
+            player.requestPlay();
+            setTimeout(() => {
+                player.requestPause();
+                setTimeout(() => {
+                    player.requestPlay();
+                    setTimeout(() => {
+                        player.requestPause();
+                        player.volume = 100;    // Return volume to normal
+                    }, 10);
+                }, 10);
+            }, 10);
+        }
     }
     const handleToEnd = () => {
         if (player) {
             const position = (player.data.song.length - 2.5) * 1000;        // hardcoded here, because real length is wrong
             const beat = player.findBeat(position);
             const finatPosition = beat.endTime;
-            setBeatLeftPos(finatPosition);
-            setBeatRightPos(finatPosition);
-            player.requestMediaSeek(finatPosition)
+            const beatIndex = beat.index + (finatPosition - beat.startTime) / beat.duration   // add remaining position to beat pos
+            refs.current.timePos = finatPosition;
+            refs.current.beatPos = beatIndex;
+            refs.current.beatLeftPos = beatIndex;
+            refs.current.beatRightPos = beatIndex;
+            player.requestMediaSeek(finatPosition);
         }
     }
     const handlePlay = () => {
-        if (isPlaying) player.requestPause(); else player.requestPlay();
         setIsPlaying((prev: boolean) => !prev);
-        console.log("Music play");
+        if (isPlaying) {
+            player.requestPause();
+            console.log("Music pause");
+        }
+        else {
+            player.requestPlay();
+            console.log("Music play");
+        }
     }
     const handleStop = () => {
         setIsPlaying(false);
         player.requestPause();
-        console.log("Music stop");
+        console.log("Music pause");
     }
     const handleRepeat = () => {
-        setRepeat((prev: boolean) => !prev); // Toggle the state
+        if (refs.current.repeat) refs.current.repeat = false; else refs.current.repeat = true; // Toggle the state
         console.log("Repeat toggled:", !refs.current.repeat);
     };
     const handlePopup = () => {             // Click popup to hide
@@ -181,7 +215,8 @@ const Footer: React.FC<FooterProps> = ({ player, isPlaying, setIsPlaying, timePo
                         bottom: 20,
                         right: 0,
                         height: "100px",
-                        cursor: "pointer"
+                        cursor: "pointer",
+                        zIndex: 3
                 }} />
             </div>
             

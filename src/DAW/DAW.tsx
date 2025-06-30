@@ -8,9 +8,10 @@ import '../index.css'; // Use Tailwind's CSS instead of App.css
 import 'bootstrap/dist/css/bootstrap.min.css';
 interface DAWProps {       // for input parameters
     player: Player,
+    musicDelay: number
 }
 
-const DAW: React.FC<DAWProps> = ({ player }) => {
+const DAW: React.FC<DAWProps> = ({ player, musicDelay }) => {
     const [isPlaying, setIsPlaying] = useState(false);      // make this global
     const [timePos, setTimePos] = useState(0);
     const [beatPos, setBeatPos] = useState(0);
@@ -70,7 +71,7 @@ const DAW: React.FC<DAWProps> = ({ player }) => {
             }}
         >
             <main className="inner-main text-center text-gray-600 d-flex flex-row justify-content-between">
-                <Track player={player}
+                <Track musicDelay={musicDelay} player={player}
                     isPlaying={isPlaying}
                     timePos={timePos} setTimePos={setTimePos}
                     beatPos={beatPos} setBeatPos={setBeatPos}
@@ -84,7 +85,8 @@ const DAW: React.FC<DAWProps> = ({ player }) => {
                     refs={refs}
                 />
             </main>
-            <Footer player={player} isPlaying={isPlaying} setIsPlaying={setIsPlaying}
+            <Footer musicDelay={musicDelay} 
+                player={player} isPlaying={isPlaying} setIsPlaying={setIsPlaying}
                 timePos={timePos}
                 beatPos={beatPos}
                 beatLeftPos={beatLeftPos} setBeatLeftPos={setBeatLeftPos}
@@ -296,7 +298,8 @@ const DAW: React.FC<DAWProps> = ({ player }) => {
 
 
             </div>
-            <TextAlive player={player}
+            <TextAlive musicDelay={musicDelay}
+                player={player}
                 timePos={timePos} setTimePos={setTimePos}
                 beatPos={beatPos} setBeatPos={setBeatPos}
                 refs={refs}

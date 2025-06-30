@@ -1,5 +1,6 @@
 {
-  "name": "mikudaw",
+  "name": "lyricaldaw",
+  "homepage": "https:https://chilly-on.github.io/LyricalDAW",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,10 +8,13 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "predeploy": "npm run build"
+    "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "bootstrap": "^5.3.6",
+    "gh-pages": "^6.3.0",
     "p5": "^2.0.3",
     "react": "^19.1.0",
     "react-bootstrap": "^2.10.10",

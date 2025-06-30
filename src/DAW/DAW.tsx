@@ -85,7 +85,8 @@ const DAW: React.FC<DAWProps> = ({ player, musicDelay }) => {
                     refs={refs}
                 />
             </main>
-            <Footer player={player} isPlaying={isPlaying} setIsPlaying={setIsPlaying}
+            <Footer musicDelay={musicDelay} 
+                player={player} isPlaying={isPlaying} setIsPlaying={setIsPlaying}
                 timePos={timePos}
                 beatPos={beatPos}
                 beatLeftPos={beatLeftPos} setBeatLeftPos={setBeatLeftPos}

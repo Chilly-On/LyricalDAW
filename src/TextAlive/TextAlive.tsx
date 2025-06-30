@@ -85,23 +85,12 @@ const TextAlive: React.FC<TextAliveProps> = ({ musicDelay, player, timePos, setT
             setBeatPos(0);
             setMasterVolume(0);
         },
-        //onMediaSeek: (position: number) => {
-        //    //console.log("Music timeline moved to:", position, "ms");
-
-
-        //    const beat = player.findBeat(position);
-        //    //console.log("Seek pos: ", position);
-        //    const beatIndex = beat.index + (position - beat.startTime) / (beat.duration)   // add remaining position to beat pos
-        //    //console.log("Beat index: ", beat.index + delta);
-        //    setTimePos(position);
-        //    setBeatPos(beatIndex);                     // Update beat here
-        //    // No update track left and right here
-        //},
-        /*Get current beat information */
-        onTimeUpdate: (position: number) => {   // position: Music time position
-            //console.log("repeat: ", refs.current.repeat);
+        onMediaSeek: (position: number) => {
+            //console.log("Seek pos: ", position);
+            //console.log("Music timeline moved to:", position, "ms");
             if (position > 232000) {            // end of song, not to overflow
                 player.requestStop();
+                refs.current.isPlaying = false;
             }
             if (position >= musicDelay) {
                 const pos = position - musicDelay;      // Relative position to the song.
@@ -129,7 +118,41 @@ const TextAlive: React.FC<TextAliveProps> = ({ musicDelay, player, timePos, setT
                 setTimePos(0);
                 setBeatPos(0);
             }
+            // No update track left and right here
         },
+        /*Get current beat information */
+        //onTimeUpdate: (position: number) => {   // position: Music time position
+        //    //console.log("repeat: ", refs.current.repeat);
+        //    if (position > 232000) {            // end of song, not to overflow
+        //        player.requestStop();
+        //    }
+        //    if (position >= musicDelay) {
+        //        const pos = position - musicDelay;      // Relative position to the song.
+        //        const beat = player.findBeat(pos);
+        //        if (b !== beat) {           // if b change
+        //            if (beat) {
+        //                const beatIndex = beat.index + (pos - beat.startTime) / beat.duration   // add remaining position to beat pos
+        //                if (refs.current.repeat && refs.current.beatLeftPos !== refs.current.beatRightPos && (
+        //                    beatIndex > refs.current.beatRightPos || beatIndex < refs.current.beatLeftPos
+        //                )) {         // If set range and current position is higher than the loop (at right), return to start of the loop
+        //                    player.requestMediaSeek(refs.current.leftTime);
+        //                }
+        //                else {
+        //                    //console.log("Beat index: ", beat.index);
+        //                    //console.log("Music time position:", position, "ms");
+        //                    //console.log("Relative position from song:", pos, "ms");
+        //                    setTimePos(pos);
+        //                    setBeatPos(beatIndex);                     // Update beat here
+        //                }
+        //            }
+        //            b = beat;
+        //        }
+        //    }
+        //    else {          // Not update when position if in the first delay before song.
+        //        setTimePos(0);
+        //        setBeatPos(0);
+        //    }
+        //},
         //onThrottledTimeUpdate: (position: number) => {  // position: Music time position
 
         //},
@@ -161,6 +184,7 @@ const TextAlive: React.FC<TextAliveProps> = ({ musicDelay, player, timePos, setT
                 const overlay = document.getElementById("overlay")
                 if (overlay)
                     overlay.style.display = 'none'; // Loaded
+                player.requestMediaSeek(musicDelay);
             }
             else {
                 console.log("Stop excessing play");

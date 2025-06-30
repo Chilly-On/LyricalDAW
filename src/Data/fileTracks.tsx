@@ -1,7 +1,7 @@
 ﻿// Color constant
 const w = "#EBF6FB";
 const r = "#FF3D3E";
-const l = "#9EA4FF";
+// const l = "#9EA4FF";
 const b = "#1E22E5";
 const y = "#E0FA25";
 const g = "#2EFF65";
@@ -161,19 +161,19 @@ const fileTracks: TrackFile[] = [   // borderTop: 1
         type: "sample",
         name: "BassSlide",
         icon: "Track/sample.png",
-        color: l,
+        color: b,
     },
     {
         type: "piano",
         name: "BassPLCenter",
         icon: "Track/piano.png",
-        color: l,
+        color: b,
     },
     {
         type: "piano",
         name: "BassPLWide",
         icon: "Track/piano.png",
-        color: l,
+        color: b,
     },
     {
         type: "piano",
@@ -759,7 +759,52 @@ const fileTracks: TrackFile[] = [   // borderTop: 1
         type: "file",
         name: "Main",
         icon: "Track/file.png",
-        color: r
+        color: r,
+        open: true,
+        tracks: [
+            {
+                type: "sample",
+                name: "A",
+                icon: "Track/sample.png",
+                color: r,
+            },
+            {
+                type: "sample",
+                name: "A 4",
+                icon: "Track/sample.png",
+                color: r,
+            },
+            {
+                type: "sample",
+                name: "A 3",
+                icon: "Track/sample.png",
+                color: r,
+            },
+            {
+                type: "sample",
+                name: "A 2",
+                icon: "Track/sample.png",
+                color: r,
+            },
+            {
+                type: "sample",
+                name: "B",
+                icon: "Track/sample.png",
+                color: r,
+            },
+            {
+                type: "sample",
+                name: "B 2",
+                icon: "Track/sample.png",
+                color: r,
+            },
+            {
+                type: "sample",
+                name: "Sabi",
+                icon: "Track/sample.png",
+                color: r,
+            },
+        ]
     },
     {
         type: "sample",

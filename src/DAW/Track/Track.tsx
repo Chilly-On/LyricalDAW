@@ -110,7 +110,7 @@ const Track: React.FC<TrackProps> = ({ musicDelay, player, isPlaying, timePos, s
 
     useEffect(() => {
         const container = scrollRef.current;
-        if (!container || !refs.current.isPlaying || beatPos < 12) return;
+        if (!container || !refs.current.isPlaying) return;
 
         const beatWidth = timeWidth + 1.2; // or whatever you use per beat
         const targetScrollX = beatPos * beatWidth - container.clientWidth / 2;
@@ -251,7 +251,7 @@ const Track: React.FC<TrackProps> = ({ musicDelay, player, isPlaying, timePos, s
                                     textAlign: "right",
                                     marginRight: "10px"
                                 }}>
-                                126/126
+                                134/134
                             </div>
                             <button
                                 style={{

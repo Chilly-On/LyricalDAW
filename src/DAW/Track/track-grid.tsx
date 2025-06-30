@@ -71,9 +71,9 @@ const Track_grid: React.FC<TimelineGridProps> = ({
         const { beatIndex, pos } = getBeatAtMouseEvent(e);
         setDragStartBeat(beatIndex);
         setDragStartTime(pos);
-        setBeatLeftPos(beatIndex);
-        setBeatRightPos(beatIndex);
-        setLeftTime(pos);
+        refs.current.beatLeftPos = beatIndex;
+        refs.current.beatRightPos = beatIndex;
+        refs.current.leftTime = pos;
         setIsDragging(true);
     };
 
@@ -83,7 +83,7 @@ const Track_grid: React.FC<TimelineGridProps> = ({
 
         console.log("leftTime: ", refs.current.leftTime);
         console.log("timePos: ", refs.current.timePos);
-        player.requestMediaSeek(refs.current.leftTime + musicDelay); // seek the song here; use real value
+        player.requestMediaSeek(refs.current.leftTime); // seek the song here; use real value
 
         const beat = player.findBeat(refs.current.leftTime);
         //console.log("Seek pos: ", position);
@@ -128,12 +128,12 @@ const Track_grid: React.FC<TimelineGridProps> = ({
         const totalDuration = timeSteps * beatDuration;
         const clickedTimeMs = relativePosition * totalDuration;
 
-        const pos = clickedTimeMs + musicDelay;      // Relative position to the song.
+        const pos = clickedTimeMs + musicDelay;      // Absolute position to the song.
 
-        const beat = player.findBeat(pos);
+        const beat = player.findBeat(clickedTimeMs);    // Take relative position to the song to calculate beat.
         const beatIndex =
             beat.index +
-            (pos - beat.startTime) / beat.duration;
+            (clickedTimeMs - beat.startTime) / beat.duration;
 
         return { beatIndex, pos };
     };

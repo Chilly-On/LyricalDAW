@@ -104,7 +104,7 @@ function App() {
         //throttleInterval: 100,          // delay loading
         vocalAmplitudeEnabled: true     // load song master volume
     });  // use to avoid spam, change token later
-    const musicDelay = 0; // Offset from first beat
+    const musicDelay = 850; // Offset from first beat
 
     //loadText(player);
 

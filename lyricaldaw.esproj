@@ -16,6 +16,5 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="private\components\" />
-    <Folder Include="src\Data\" />
   </ItemGroup>
 </Project>

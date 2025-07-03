@@ -104,13 +104,13 @@ function App() {
         //throttleInterval: 100,          // delay loading
         vocalAmplitudeEnabled: true     // load song master volume
     });  // use to avoid spam, change token later
-    const musicDelay = 850; // Offset from first beat
+    const musicOffset = 850; // Offset from first beat
 
     //loadText(player);
 
     return (
         <div className="flex flex-col">
-            <DAW player={player} musicDelay={musicDelay} />
+            <DAW player={player} musicOffset={musicOffset} />
         </div>
     );
 }

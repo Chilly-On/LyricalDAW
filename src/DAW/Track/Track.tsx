@@ -43,7 +43,7 @@ type PlayerRefs = {
     leftTime: number;
 };
 interface TrackProps {       // for input parameters
-    musicDelay: number,
+    musicOffset: number,
     player: Player,
     isPlaying: boolean,
     timePos: number,
@@ -60,7 +60,7 @@ interface TrackProps {       // for input parameters
 }
 
 
-const Track: React.FC<TrackProps> = ({ musicDelay, player, isPlaying, timePos, setTimePos, beatPos, setBeatPos, beatLeftPos, setBeatLeftPos, beatRightPos, setBeatRightPos, leftTime, setLeftTime, refs }) => {
+const Track: React.FC<TrackProps> = ({ musicOffset, player, isPlaying, timePos, setTimePos, beatPos, setBeatPos, beatLeftPos, setBeatLeftPos, beatRightPos, setBeatRightPos, leftTime, setLeftTime, refs }) => {
     // Initialize track grid length here
     //const timeSteps = player.data.song.length * 4;          // change 4/4 or 3/4 here
     const timeSteps = 125 * 4 + 2;          // change 4/4 or 3/4 here; grid is quarterBeat
@@ -112,12 +112,14 @@ const Track: React.FC<TrackProps> = ({ musicDelay, player, isPlaying, timePos, s
         const container = scrollRef.current;
         if (!container || !refs.current.isPlaying) return;
 
-        const beatWidth = timeWidth + 1.2; // or whatever you use per beat
-        const targetScrollX = beatPos * beatWidth - container.clientWidth / 2;
+        const targetScrollX = beatPos * timeWidth - (container.clientWidth - 300) / 2;  // Subtract the width of track headers
+
+        console.log("targetScrollX: ", targetScrollX);
 
         // Smooth scroll to center the pointer
         container.scrollTo({
-            left: targetScrollX
+            left: targetScrollX,
+            behavior: "instant"
         });
     }, [beatPos, isPlaying]);
 
@@ -342,7 +344,7 @@ const Track: React.FC<TrackProps> = ({ musicDelay, player, isPlaying, timePos, s
             >
                 {/* Timeline grid*/}
                 {/* Consider redesign timeline so that it maintains weight during zooming in or out*/}
-                <Track_grid musicDelay={musicDelay}
+                <Track_grid musicOffset={musicOffset}
                     gridData={gridData}
                     player={player}
                     timeSteps={timeSteps}
@@ -358,14 +360,14 @@ const Track: React.FC<TrackProps> = ({ musicDelay, player, isPlaying, timePos, s
                 {/* Timeline pointer*/}
                 {/* Can hide this in deploy, as well as the scroll is correct (pointer should be on screen) */}
                 <Timeline_pointer
-                //musicDelay={musicDelay}
+                //musicOffset={musicOffset}
                     refs={refs}
                     timelineHeight={timelineHeight}
                     timeWidth={timeWidth}
                 />
                 {/* Range pointer */}
                 <Range_pointer
-                    //musicDelay={musicDelay}
+                    //musicOffset={musicOffset}
                     refs={refs}
                     timelineHeight={timelineHeight}
                     beatPos={beatPos}

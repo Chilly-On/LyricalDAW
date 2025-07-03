@@ -37,13 +37,16 @@ const Right_menu: React.FC<RightMenuProps> = ({ player, masterVolume, setMasterV
                 const normalized = (amp && max ? amp / max : 0) * 2;
                 setMasterVolume(Math.min(1, normalized));
             }
+            else {
+                setMasterVolume(0);
+            }
 
             animationId = requestAnimationFrame(update);
         };
 
         update();
         return () => cancelAnimationFrame(animationId);
-    }, [player, masterVolume]);
+    }, [player, masterVolume, setMasterVolume]);
 
     return (
         <div className="flex-column gap-2 right-menu"

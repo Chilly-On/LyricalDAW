@@ -24,7 +24,7 @@ type PlayerRefs = {
     leftTime: number;
 };
 interface FooterProps {       // for input parameters
-    musicDelay: number,
+    musicOffset: number,
     player: Player,
     isPlaying: boolean,
     setIsPlaying: React.Dispatch<React.SetStateAction<boolean>>,
@@ -40,23 +40,23 @@ interface FooterProps {       // for input parameters
 }
 
 
-const Footer: React.FC<FooterProps> = ({ musicDelay, player, isPlaying, setIsPlaying, timePos, beatPos, beatLeftPos, beatRightPos, repeat, refs }) => {
+const Footer: React.FC<FooterProps> = ({ musicOffset, player, isPlaying, setIsPlaying, timePos, beatPos, beatLeftPos, beatRightPos, repeat, refs }) => {
     const handleToStart = () => {
         refs.current.timePos = 0;
         refs.current.beatPos = 0;
         refs.current.beatLeftPos = 0;
         refs.current.beatRightPos = 0;
-        player.requestMediaSeek(musicDelay);
+        player.requestMediaSeek(musicOffset);
 
         console.log("To start");
         console.log("leftTime: ", refs.current.leftTime);
         console.log("timePos: ", refs.current.timePos);
 
         console.log("Real position after seek:", player.timer?.position);
-        if (!refs.current.isPlaying && player.timer?.position !== musicDelay) {     // If found unsync at pause
+        if (!refs.current.isPlaying && player.timer?.position !== musicOffset) {     // If found unsync at pause
             console.error("Time seeking failed due to the delay of music player. Stop and restart the music may solve the problem.");
             player.volume = 0;  // Mute to wait for reloading
-            refs.current.timePos = musicDelay - 20; // Subtract the time for reloading
+            refs.current.timePos = musicOffset - 20; // Subtract the time for reloading
             refs.current.beatPos = 0;
             player.requestPlay();
             setTimeout(() => {
@@ -212,8 +212,8 @@ const Footer: React.FC<FooterProps> = ({ musicDelay, player, isPlaying, setIsPla
                     alt="Play Button"
                     style={{
                         position: "absolute",
-                        bottom: 20,
-                        right: 0,
+                        bottom: 30,
+                        right: -140,
                         height: "100px",
                         cursor: "pointer",
                         zIndex: 3

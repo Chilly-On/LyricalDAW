@@ -15,7 +15,7 @@ type PlayerRefs = {
     masterVolume: number;
 };
 interface TextAliveProps {       // for input parameters
-    musicDelay: number;
+    musicOffset: number;
     player: Player,
     timePos: number,
     setTimePos: (n: number) => void,
@@ -26,7 +26,7 @@ interface TextAliveProps {       // for input parameters
     setMasterVolume: (n: number) => void,
 }
 
-const TextAlive: React.FC<TextAliveProps> = ({ musicDelay, player, timePos, setTimePos, beatPos, setBeatPos, refs, masterVolume, setMasterVolume }) => {
+const TextAlive: React.FC<TextAliveProps> = ({ musicOffset, player, timePos, setTimePos, beatPos, setBeatPos, refs, masterVolume, setMasterVolume }) => {
     let b: IBeat;       // beat, chord
     let overlay: boolean = true;
 
@@ -77,13 +77,11 @@ const TextAlive: React.FC<TextAliveProps> = ({ musicDelay, player, timePos, setT
         },
         onPause: () => {
             console.log("Music paused");
-            setMasterVolume(0);
         },
         onStop: () => {
             console.log("Music stopped");
             setTimePos(0);
             setBeatPos(0);
-            setMasterVolume(0);
         },
         onMediaSeek: (position: number) => {
             //console.log("Seek pos: ", position);
@@ -92,8 +90,8 @@ const TextAlive: React.FC<TextAliveProps> = ({ musicDelay, player, timePos, setT
                 player.requestStop();
                 refs.current.isPlaying = false;
             }
-            if (position >= musicDelay) {
-                const pos = position - musicDelay;      // Relative position to the song.
+            if (position >= musicOffset) {
+                const pos = position - musicOffset;      // Relative position to the song.
                 const beat = player.findBeat(pos);
                 if (b !== beat) {           // if b change
                     if (beat) {
@@ -126,8 +124,8 @@ const TextAlive: React.FC<TextAliveProps> = ({ musicDelay, player, timePos, setT
         //    if (position > 232000) {            // end of song, not to overflow
         //        player.requestStop();
         //    }
-        //    if (position >= musicDelay) {
-        //        const pos = position - musicDelay;      // Relative position to the song.
+        //    if (position >= musicOffset) {
+        //        const pos = position - musicOffset;      // Relative position to the song.
         //        const beat = player.findBeat(pos);
         //        if (b !== beat) {           // if b change
         //            if (beat) {
@@ -184,7 +182,9 @@ const TextAlive: React.FC<TextAliveProps> = ({ musicDelay, player, timePos, setT
                 const overlay = document.getElementById("overlay")
                 if (overlay)
                     overlay.style.display = 'none'; // Loaded
-                player.requestMediaSeek(musicDelay);
+                player.requestMediaSeek(musicOffset);
+                setMasterVolume(0);
+                refs.current.masterVolume = 0;
             }
             else {
                 console.log("Stop excessing play");

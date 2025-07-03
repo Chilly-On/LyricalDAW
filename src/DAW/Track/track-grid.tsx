@@ -12,7 +12,7 @@ type PlayerRefs = {
 };
 
 type TimelineGridProps = {
-    musicDelay: number,
+    musicOffset: number,
     gridData: string[][];
     player: Player;
     timeSteps: number;
@@ -32,7 +32,7 @@ type TimelineGridProps = {
 };
 
 const Track_grid: React.FC<TimelineGridProps> = ({
-    musicDelay,
+    musicOffset,
     gridData,
     player, // TextAlive
     timeSteps,
@@ -93,7 +93,7 @@ const Track_grid: React.FC<TimelineGridProps> = ({
 
         console.log("Real position after seek:", player.timer?.position);
         if (!refs.current.isPlaying && player.timer?.position !== refs.current.leftTime) {     // If found unsync at pause
-            console.error("Time seeking failed due to the delay of music player. Stop and restart the music may solve the problem.");
+            console.warn("Time seeking failed due to the delay of music player. Stop and restart the music may solve the problem.");
             player.volume = 0;  // Mute to wait for reloading
             refs.current.leftTime = refs.current.leftTime - 20; // Subtract the time for reloading
             refs.current.timePos = refs.current.leftTime;
@@ -128,7 +128,7 @@ const Track_grid: React.FC<TimelineGridProps> = ({
         const totalDuration = timeSteps * beatDuration;
         const clickedTimeMs = relativePosition * totalDuration;
 
-        const pos = clickedTimeMs + musicDelay;      // Absolute position to the song.
+        const pos = clickedTimeMs + musicOffset;      // Absolute position to the song.
 
         const beat = player.findBeat(clickedTimeMs);    // Take relative position to the song to calculate beat.
         const beatIndex =

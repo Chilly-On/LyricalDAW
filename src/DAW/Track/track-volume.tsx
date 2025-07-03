@@ -18,7 +18,7 @@ interface TrackVolumeProps {       // for input parameters
     refs: React.RefObject<PlayerRefs>;
 }
 
-const Track_Volume: React.FC<TrackVolumeProps> = ({ beatPos, rowGridData, trackNo, trackVolume, setTrackVolume, refs }) => {
+const Track_Volume: React.FC<TrackVolumeProps> = ({ rowGridData, trackNo, trackVolume, setTrackVolume, refs }) => {
     useEffect(() => {
         // Update index i
         const updateVolume = (i: number, newValue: number) => {
@@ -27,6 +27,20 @@ const Track_Volume: React.FC<TrackVolumeProps> = ({ beatPos, rowGridData, trackN
                 newArr[i] = newValue;
                 return newArr;
             });
+        };
+
+        //const getVolume = (i: number) => {
+        //    return trackVolume[i];
+        //}
+
+        const findClosestBeat = (pos: number, limit: number) => {
+            for (let i = 1; i < limit; i++) {
+                if (pos - i < 0)        // Underflow
+                    return 0;
+                else if (rowGridData[pos - i] !== "")        // If any of previous 8 beats are having tracks
+                    return i;
+            }
+            return 0;
         };
 
         let animationId: number;
@@ -38,13 +52,24 @@ const Track_Volume: React.FC<TrackVolumeProps> = ({ beatPos, rowGridData, trackN
                     updateVolume(trackNo, 1);   // if have track and play, make it active
                     //console.log("rowGridData[beat]: ", rowGridData[beat]);
                 }
-                else if (beat > 0 && beat - 1 < rowGridData.length && rowGridData[beat - 1] !== "") {        // If after 1 beat of track
-                    const trackVolume = 1 - (refs.current.beatPos - beat);     // Fake volume for demonstartion, the farther position, the lower volume
-                    updateVolume(trackNo, trackVolume);   // if no square, mute track
-                }
+                //else if (getVolume(trackNo) > 0) {
                 else {
-                    updateVolume(trackNo, 0);   // if no square, mute track
+                    const limitLengthen = 8;
+                    const closestBeat = findClosestBeat(beat, limitLengthen);
+                    if (closestBeat > 0) {
+                        const trackVolume = 1 - (closestBeat + refs.current.beatPos - beat) / limitLengthen;     // Fake volume for demonstartion, the farther position, the lower volume
+                        //console.log("trackVolume[", trackNo, "]: ", trackVolume);
+                        updateVolume(trackNo, trackVolume);   // if no square, mute track
+                    }
+                    else {
+                        updateVolume(trackNo, 0); // if no square, mute track
+                    }
                 }
+                //else {
+                //    console.log("trackNo: ", trackNo);
+                //    console.log("getVolume(trackNo): ", getVolume(trackNo));
+                //    updateVolume(trackNo, 0);   // if no square, mute track
+                //}
             }
             else {
                 updateVolume(trackNo, 0);   // if no playing, mute track
@@ -54,7 +79,7 @@ const Track_Volume: React.FC<TrackVolumeProps> = ({ beatPos, rowGridData, trackN
 
         update();
         return () => cancelAnimationFrame(animationId);
-    }, [rowGridData, trackNo, beatPos, setTrackVolume, refs]);
+    }, [rowGridData, trackNo, setTrackVolume, refs]);
     return (
         <div className="d-flex flex-row" style={{
             gap: "1px"

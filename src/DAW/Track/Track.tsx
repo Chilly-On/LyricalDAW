@@ -1,4 +1,4 @@
-﻿import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Player } from "textalive-app-api";
 import Track_gen from "./track-gen";
 import Track_grid from "./track-grid";

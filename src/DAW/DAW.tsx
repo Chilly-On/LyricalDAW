@@ -93,18 +93,6 @@ const DAW: React.FC<DAWProps> = ({ player, musicOffset }) => {
                 beatRightPos={beatRightPos} setBeatRightPos={setBeatRightPos}
                 refs={refs} repeat={repeat} setRepeat={setRepeat}
             />
-            <div id="lyrics"
-                style={{                           // set default position for lyrics
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    fontSize: "72px",
-                    color: "white",
-                    pointerEvents: "none",           // click though
-                    zIndex: "4"
-                }}>
-            </div>
             <div className="justify-content-center align-items-center"
                 id="overlay"
                 style={{
@@ -120,12 +108,32 @@ const DAW: React.FC<DAWProps> = ({ player, musicOffset }) => {
                     zIndex: "3"
                 }}
             >
-                <img 
+                <img
                     src="logo.png"
                     alt="Logo layer"
                 >
                 </img>
             </div>
+            <div id="lyrics"
+                style={{                           // set default position for lyrics
+                    display: refs.current.isPlaying ? "block" : "none",
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    fontSize: "72px",
+                    color: "white",
+                    pointerEvents: "none",           // click though
+                    zIndex: "4"
+                }}>
+            </div>
+            {/* Insert illustration here, in absolute position */}
+            <img className="illust justify-content-center align-items-center"
+                id="illust"
+                src="illust.png"
+                alt="Logo layer"
+            >
+            </img>
             <div
                 className="overlay justify-content-center align-items-center"
                 id="instructJP"
@@ -207,7 +215,6 @@ const DAW: React.FC<DAWProps> = ({ player, musicOffset }) => {
                 refs={refs}
                 masterVolume={masterVolume} setMasterVolume={setMasterVolume}
             />
-            {/* Insert illustration here, in absolute position */ }
         </div>
     );
 }

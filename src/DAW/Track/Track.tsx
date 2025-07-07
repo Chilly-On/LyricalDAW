@@ -147,6 +147,7 @@ const Track: React.FC<TrackProps> = ({ musicOffset, player, isPlaying, timePos, 
         <div className="d-flex flex-row"
             ref={scrollRef}
             style={{
+                position: "relative",
                 backgroundColor: "#2DA399",
                 border: "2.5px solid #f9f9fa",
                 borderRadius: "10px",

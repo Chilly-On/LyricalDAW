@@ -2,6 +2,7 @@
 import DAW from './DAW/DAW';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 import { Player, Ease } from "textalive-app-api";
 import P5 from 'p5';
 
@@ -267,7 +268,7 @@ function App() {
 
     return (
         <div className="flex flex-col">
-            <DAW player={player} />
+            <DAW player={player} musicOffset={musicOffset} />
         </div>
     );
 }

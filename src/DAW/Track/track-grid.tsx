@@ -12,6 +12,7 @@ type PlayerRefs = {
 };
 
 type TimelineGridProps = {
+    musicOffset: number,
     gridData: string[][];
     player: Player;
     timeSteps: number;
@@ -31,6 +32,7 @@ type TimelineGridProps = {
 };
 
 const Track_grid: React.FC<TimelineGridProps> = ({
+    musicOffset,
     gridData,
     player, // TextAlive
     timeSteps,
@@ -66,12 +68,12 @@ const Track_grid: React.FC<TimelineGridProps> = ({
     const handleMouseDown = (e: React.MouseEvent) => {
         if (!gridRef.current || !player ) return;
 
-        const { beatIndex, clickedTimeMs } = getBeatAtMouseEvent(e);
+        const { beatIndex, pos } = getBeatAtMouseEvent(e);
         setDragStartBeat(beatIndex);
-        setDragStartTime(clickedTimeMs);
-        setBeatLeftPos(beatIndex);
-        setBeatRightPos(beatIndex);
-        setLeftTime(clickedTimeMs);
+        setDragStartTime(pos);
+        refs.current.beatLeftPos = beatIndex;
+        refs.current.beatRightPos = beatIndex;
+        refs.current.leftTime = pos;
         setIsDragging(true);
     };
 
@@ -81,7 +83,7 @@ const Track_grid: React.FC<TimelineGridProps> = ({
 
         console.log("leftTime: ", refs.current.leftTime);
         console.log("timePos: ", refs.current.timePos);
-        player.requestMediaSeek(refs.current.leftTime); // seek the song here
+        player.requestMediaSeek(refs.current.leftTime); // seek the song here; use real value
 
         const beat = player.findBeat(refs.current.leftTime);
         //console.log("Seek pos: ", position);
@@ -90,13 +92,31 @@ const Track_grid: React.FC<TimelineGridProps> = ({
         refs.current.beatPos = beatIndex;
 
         console.log("Real position after seek:", player.timer?.position);
+        if (!refs.current.isPlaying && player.timer?.position !== refs.current.leftTime) {     // If found unsync at pause
+            console.warn("Time seeking failed due to the delay of music player. Stop and restart the music may solve the problem.");
+            player.volume = 0;  // Mute to wait for reloading
+            refs.current.leftTime = refs.current.leftTime - 20; // Subtract the time for reloading
+            refs.current.timePos = refs.current.leftTime;
+            refs.current.beatPos = beatIndex;
+            player.requestPlay();
+            setTimeout(() => {
+                player.requestPause();
+                setTimeout(() => {
+                    player.requestPlay();
+                    setTimeout(() => {
+                        player.requestPause();
+                        player.volume = 100;    // Return volume to normal
+                    }, 10);
+                }, 10);
+            }, 10);
+        }
     };
 
     const getBeatAtMouseEvent = (
         e: React.MouseEvent | MouseEvent
-    ): { beatIndex: number; clickedTimeMs: number } => {
+    ): { beatIndex: number; pos: number } => {
         const container = gridRef.current;
-        if (!container) return { beatIndex: 0, clickedTimeMs: 0 }; // or throw an error or fallback
+        if (!container) return { beatIndex: 0, pos: 0 }; // or throw an error or fallback
 
         const gridRect = container.getBoundingClientRect();
         const offsetX = e.clientX - gridRect.left + container.scrollLeft;
@@ -108,24 +128,26 @@ const Track_grid: React.FC<TimelineGridProps> = ({
         const totalDuration = timeSteps * beatDuration;
         const clickedTimeMs = relativePosition * totalDuration;
 
-        const beat = player.findBeat(clickedTimeMs);
+        const pos = clickedTimeMs + musicOffset;      // Absolute position to the song.
+
+        const beat = player.findBeat(clickedTimeMs);    // Take relative position to the song to calculate beat.
         const beatIndex =
             beat.index +
-            (clickedTimeMs - beat.startTime) / (beat.endTime - beat.startTime);
+            (clickedTimeMs - beat.startTime) / beat.duration;
 
-        return { beatIndex, clickedTimeMs };
+        return { beatIndex, pos };
     };
 
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
             if (!isDragging || dragStartBeat === null || !player) return;
 
-            const { beatIndex, clickedTimeMs } = getBeatAtMouseEvent(e); // as any to cast to React.MouseEvent
+            const { beatIndex, pos } = getBeatAtMouseEvent(e); // as any to cast to React.MouseEvent
             const left = Math.min(dragStartBeat, beatIndex);
             const right = Math.max(dragStartBeat, beatIndex);
             setBeatLeftPos(left);
             setBeatRightPos(right);
-            setLeftTime(Math.min(dragStartTime, clickedTimeMs));
+            setLeftTime(Math.min(dragStartTime, pos));
         };
 
         if (isDragging) {
@@ -190,7 +212,7 @@ const Track_grid: React.FC<TimelineGridProps> = ({
     //    setBeatRightPos(beatIndex);
     //};
 
-    return (
+    return (        // Support quarter beat
         <div
             //ref={containerRef}
             //onWheel={handleWheel}
@@ -203,14 +225,15 @@ const Track_grid: React.FC<TimelineGridProps> = ({
                 backgroundColor: "#2f3135",
                 border: "1px solid #999",
                 borderTopRightRadius: "10px",
-                borderBottomRightRadius: "10px"
+                borderBottomRightRadius: "10px",
             }}
         >
             {/* Timeline Header */}
             <div
                 style={{
                     position: "sticky",
-                    top: 0
+                    top: 0,
+                    zIndex: 1
                 } }
             >
                 <div
@@ -235,12 +258,14 @@ const Track_grid: React.FC<TimelineGridProps> = ({
                                 height: "20px",
                                 borderRight: "1px solid #737579",
                                 paddingLeft: "2px",
-                                color: "black",
+                                color: "white",
                                 fontWeight: "bold"
                             }}
                         >
-                            {/* If is divisible by 4, display; First index is 1 */ }
-                            {!(i % 4) ? (i / 4 + 1) : ""}
+                            {/* If is divisible by full beat, display
+                                First index is 1
+                            */ }
+                            {!(i % 4) ? (Math.floor(i / 4) + 1) : ""}
                         </div>
                     ))}
                 </div>
@@ -255,7 +280,7 @@ const Track_grid: React.FC<TimelineGridProps> = ({
                     borderLeft: "1px solid #737579",
                     overflow: "auto",
                     position: "relative",
-                    cursor: "pointer"
+                    cursor: "pointer",
                 }}
             >
                 {gridData.flatMap((row, rowIndex) =>
@@ -266,8 +291,8 @@ const Track_grid: React.FC<TimelineGridProps> = ({
                                 key={`${rowIndex}-${colIndex}`}
                                 style={{
                                     backgroundColor: cellColor,
-                                    borderRight: "1px solid #737579",
-                                    borderBottom: "1px solid #737579"
+                                    borderRight:  "1px solid #737579",
+                                    borderBottom: "1px solid #737579",
                                 }}
                             />
                         );

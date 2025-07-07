@@ -8,9 +8,10 @@ import '../index.css'; // Use Tailwind's CSS instead of App.css
 import 'bootstrap/dist/css/bootstrap.min.css';
 interface DAWProps {       // for input parameters
     player: Player,
+    musicOffset: number
 }
 
-const DAW: React.FC<DAWProps> = ({ player }) => {
+const DAW: React.FC<DAWProps> = ({ player, musicOffset }) => {
     const [isPlaying, setIsPlaying] = useState(false);      // make this global
     const [timePos, setTimePos] = useState(0);
     const [beatPos, setBeatPos] = useState(0);
@@ -44,7 +45,7 @@ const DAW: React.FC<DAWProps> = ({ player }) => {
         const instructJP = document.getElementById("instructJP");
         const instructEN = document.getElementById("instructEN");
         if (instructJP) {
-            instructJP.style.display = 'none'; // Hide if have popup
+            instructJP.style.display = 'none';
         }
         if (instructEN) {
             instructEN.style.display = 'flex'; // Hide if have popup
@@ -54,7 +55,7 @@ const DAW: React.FC<DAWProps> = ({ player }) => {
         const instructJP = document.getElementById("instructJP");
         const instructEN = document.getElementById("instructEN");
         if (instructJP) {
-            instructJP.style.display = 'flex'; // Hide if have popup
+            instructJP.style.display = 'flex';
         }
         if (instructEN) {
             instructEN.style.display = 'none'; // Hide if have popup
@@ -70,7 +71,7 @@ const DAW: React.FC<DAWProps> = ({ player }) => {
             }}
         >
             <main className="inner-main text-center text-gray-600 d-flex flex-row justify-content-between">
-                <Track player={player}
+                <Track musicOffset={musicOffset} player={player}
                     isPlaying={isPlaying}
                     timePos={timePos} setTimePos={setTimePos}
                     beatPos={beatPos} setBeatPos={setBeatPos}
@@ -84,7 +85,8 @@ const DAW: React.FC<DAWProps> = ({ player }) => {
                     refs={refs}
                 />
             </main>
-            <Footer player={player} isPlaying={isPlaying} setIsPlaying={setIsPlaying}
+            <Footer musicOffset={musicOffset} 
+                player={player} isPlaying={isPlaying} setIsPlaying={setIsPlaying}
                 timePos={timePos}
                 beatPos={beatPos}
                 beatLeftPos={beatLeftPos} setBeatLeftPos={setBeatLeftPos}
@@ -100,12 +102,12 @@ const DAW: React.FC<DAWProps> = ({ player }) => {
                     fontSize: "72px",
                     color: "white",
                     pointerEvents: "none",           // click though
-                    zIndex: "2"
+                    zIndex: "4"
                 }}>
             </div>
             <div className="justify-content-center align-items-center"
                 id="overlay"
-                style={{                           // set default position for lyrics
+                style={{
                     display: "flex",
                     position: "absolute",
                     top: 0,
@@ -116,31 +118,18 @@ const DAW: React.FC<DAWProps> = ({ player }) => {
                     height: "100%",
                     backgroundColor: "#70767a80",
                     zIndex: "3"
-                }}>
+                }}
+            >
                 <img 
                     src="logo.png"
                     alt="Logo layer"
-                    style={{                           // set default position for lyrics
-
-                    }}
                 >
                 </img>
             </div>
             <div
-                className="justify-content-center align-items-center"
+                className="overlay justify-content-center align-items-center"
                 id="instructJP"
-                style={{                           // set default position for lyrics
-                    display: "none",
-                    position: "absolute",
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    width: "100%",
-                    height: "100%",
-                    backgroundColor: "#70767a80",
-                    zIndex: "3"
-                }}>
+            >
                 <div
                     style={{                           // set default position for lyrics
                         position: "relative"
@@ -149,83 +138,34 @@ const DAW: React.FC<DAWProps> = ({ player }) => {
                         src="helpJP.png"
                         alt="Logo layer"
                         style={{                           // set default position for lyrics
-                            height: "700px"
+                            height: "500px"
                         }}
                     >
                     </img>
-                    <div className="d-flex flex-row align-items-center text-center justify-content-between"
-                        style={{
-                            position: "absolute",
-                            left: "10%",
-                            bottom: "10%",
-                            width: "470px",
-                            height: "80px",
-                            borderWidth: "0px",
-                            paddingLeft: "10px",
-                            fontSize: "32px",
-                        }}>
-                        <button
+                    <div className="help-button-container d-flex flex-row align-items-center text-center justify-content-start">
+                        <button className="help-button"
                             onClick={handleClose}
                             style={{
-                                width: "200px",
-                                height: "inherit",
-                                position: "relative",
                                 backgroundColor: "#15c18d",
-                                borderWidth: "0px",
-                                borderRadius: "30px",
                             }}>
-                            <div className="text-center"
-                                style={{                           // set default position for lyrics
-                                    width: "inherit",
-                                    position: "absolute",
-                                    top: "50%",
-                                    left: "50%",
-                                    transform: "translate(-50%, -50%)",
-                                    color: "white"
-                                }}
+                            <div className="help-text text-center"
                             >閉じる</div>
                         </button>
-                        <button
+                        <button className="help-button"
                             onClick={handleEN}
                             style={{
-                                width: "200px",
-                                height: "inherit",
-                                position: "relative",
                                 backgroundColor: "#15c173",
-                                borderWidth: "0px",
-                                borderRadius: "30px",
                             }}>
-                            <div className="text-center"
-                                style={{                           // set default position for lyrics
-                                    width: "inherit",
-                                    position: "absolute",
-                                    top: "50%",
-                                    left: "50%",
-                                    transform: "translate(-50%, -50%)",
-                                    color: "white"
-                                }}
+                            <div className="help-text text-center"
                             >English</div>
                         </button>
                     </div>
                 </div>
-
-
             </div>
             <div
-                className="justify-content-center align-items-center"
+                className="overlay justify-content-center align-items-center"
                 id="instructEN"
-                style={{                           // set default position for lyrics
-                    display: "none",
-                    position: "absolute",
-                    top: 0,
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    width: "100%",
-                    height: "100%",
-                    backgroundColor: "#70767a80",
-                    zIndex: "3"
-                }}>
+            >
                 <div
                     style={{                           // set default position for lyrics
                         position: "relative"
@@ -234,61 +174,25 @@ const DAW: React.FC<DAWProps> = ({ player }) => {
                         src="helpEN.png"
                         alt="Logo layer"
                         style={{                           // set default position for lyrics
-                            height: "700px"
+                            height: "500px"
                         }}
                     >
                     </img>
-                    <div className="d-flex flex-row align-items-center text-center justify-content-between"
-                        style={{
-                            position: "absolute",
-                            left: "10%",
-                            bottom: "10%",
-                            width: "470px",
-                            height: "80px",
-                            borderWidth: "0px",
-                            paddingLeft: "10px",
-                            fontSize: "32px",
-                        }}>
-                        <button
+                    <div className="help-button-container d-flex flex-row align-items-center text-center justify-content-between">
+                        <button className="help-button"
                             onClick={handleClose}
                             style={{
-                                width: "200px",
-                                height: "inherit",
-                                position: "relative",
                                 backgroundColor: "#15c18d",
-                                borderWidth: "0px",
-                                borderRadius: "30px",
                             }}>
-                            <div className="text-center"
-                                style={{                           // set default position for lyrics
-                                    width: "inherit",
-                                    position: "absolute",
-                                    top: "50%",
-                                    left: "50%",
-                                    transform: "translate(-50%, -50%)",
-                                    color: "white"
-                                }}
+                            <div className="help-text text-center"
                             >Close</div>
                         </button>
-                        <button
+                        <button className="help-button"
                             onClick={handleJP}
                             style={{
-                                width: "200px",
-                                height: "inherit",
-                                position: "relative",
                                 backgroundColor: "#15c173",
-                                borderWidth: "0px",
-                                borderRadius: "30px",
                             }}>
-                            <div className="text-center"
-                                style={{                           // set default position for lyrics
-                                    width: "inherit",
-                                    position: "absolute",
-                                    top: "50%",
-                                    left: "50%",
-                                    transform: "translate(-50%, -50%)",
-                                    color: "white"
-                                }}
+                            <div className="help-text text-center"
                             >日本語</div>
                         </button>
                     </div>
@@ -296,7 +200,8 @@ const DAW: React.FC<DAWProps> = ({ player }) => {
 
 
             </div>
-            <TextAlive player={player}
+            <TextAlive musicOffset={musicOffset}
+                player={player}
                 timePos={timePos} setTimePos={setTimePos}
                 beatPos={beatPos} setBeatPos={setBeatPos}
                 refs={refs}

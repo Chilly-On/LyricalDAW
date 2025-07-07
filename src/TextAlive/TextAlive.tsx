@@ -15,6 +15,7 @@ type PlayerRefs = {
     masterVolume: number;
 };
 interface TextAliveProps {       // for input parameters
+    musicOffset: number;
     player: Player,
     timePos: number,
     setTimePos: (n: number) => void,
@@ -25,35 +26,39 @@ interface TextAliveProps {       // for input parameters
     setMasterVolume: (n: number) => void,
 }
 
-const TextAlive: React.FC<TextAliveProps> = ({ player, timePos, setTimePos, beatPos, setBeatPos, refs, masterVolume, setMasterVolume }) => {
+const TextAlive: React.FC<TextAliveProps> = ({ musicOffset, player, timePos, setTimePos, beatPos, setBeatPos, refs, masterVolume, setMasterVolume }) => {
     let b: IBeat;       // beat, chord
     let overlay: boolean = true;
 
     // Force to update value completely
     useEffect(() => {
         refs.current.timePos = timePos;
-    }, [timePos]);
+    }, [timePos, refs]);
     useEffect(() => {
         refs.current.beatPos = beatPos;
-    }, [beatPos]);
+    }, [beatPos, refs]);
     useEffect(() => {
         refs.current.masterVolume = masterVolume;
-    }, [masterVolume]);
+    }, [masterVolume, refs]);
 
     player.addListener({
         /* when the API is loaded */
         onAppReady: (app: IPlayerApp) => {
             if (!app.managed) { // If load music first time, Add music here
-                // アリフレーション / 雨良 Amala
-                player.createFromSongUrl("https://piapro.jp/t/SuQO/20250127235813", {
-                    video: {
-                        beatId: 4694276,
-                        chordId: 2830731,
-                        repetitiveSegmentId: 2946479,
-                        lyricId: 67811,
-                        lyricDiffId: 20655
-                    },
-                });
+                 //アリフレーション / 雨良 Amala
+                 player.createFromSongUrl("https://piapro.jp/t/SuQO/20250127235813", {
+                   video: {
+                     // 音楽地図訂正履歴
+                     beatId: 4694276,
+                     chordId: 2830731,
+                     repetitiveSegmentId: 2946479,
+                
+                     // 歌詞URL: https://piapro.jp/t/GbYz
+                     // 歌詞タイミング訂正履歴: https://textalive.jp/lyrics/piapro.jp%2Ft%2FSuQO%2F20250127235813
+                     lyricId: 67811,
+                     lyricDiffId: 20655
+                   },
+                 });
             }
         },
 
@@ -72,55 +77,83 @@ const TextAlive: React.FC<TextAliveProps> = ({ player, timePos, setTimePos, beat
         },
         onPause: () => {
             console.log("Music paused");
-            setMasterVolume(0);
         },
         onStop: () => {
             console.log("Music stopped");
             setTimePos(0);
             setBeatPos(0);
-            setMasterVolume(0);
         },
         onMediaSeek: (position: number) => {
-            //console.log("Music timeline moved to:", position, "ms");
-
-
-            const beat = player.findBeat(position);
             //console.log("Seek pos: ", position);
-            const beatIndex = beat.index + (position - beat.startTime) / (beat.endTime - beat.startTime)   // add remaining position to beat pos
-            //console.log("Beat index: ", beat.index + delta);
-            setTimePos(position);
-            setBeatPos(beatIndex);                     // Update beat here
+            //console.log("Music timeline moved to:", position, "ms");
+            if (position > 232000) {            // end of song, not to overflow
+                player.requestStop();
+                refs.current.isPlaying = false;
+            }
+            if (position >= musicOffset) {
+                const pos = position - musicOffset;      // Relative position to the song.
+                const beat = player.findBeat(pos);
+                if (b !== beat) {           // if b change
+                    if (beat) {
+                        const beatIndex = beat.index + (pos - beat.startTime) / beat.duration   // add remaining position to beat pos
+                        if (refs.current.repeat && refs.current.beatLeftPos !== refs.current.beatRightPos && (
+                            beatIndex > refs.current.beatRightPos || beatIndex < refs.current.beatLeftPos
+                        )) {         // If set range and current position is higher than the loop (at right), return to start of the loop
+                            player.requestMediaSeek(refs.current.leftTime);
+                        }
+                        else {
+                            //console.log("Beat index: ", beat.index);
+                            //console.log("Music time position:", position, "ms");
+                            //console.log("Relative position from song:", pos, "ms");
+                            setTimePos(pos);
+                            setBeatPos(beatIndex);                     // Update beat here
+                        }
+                    }
+                    b = beat;
+                }
+            }
+            else {          // Not update when position if in the first delay before song.
+                setTimePos(0);
+                setBeatPos(0);
+            }
             // No update track left and right here
         },
         /*Get current beat information */
-        //onThrottledTimeUpdate: (position) => {   // position: Music time position
+        //onTimeUpdate: (position: number) => {   // position: Music time position
+        //    //console.log("repeat: ", refs.current.repeat);
+        //    if (position > 232000) {            // end of song, not to overflow
+        //        player.requestStop();
+        //    }
+        //    if (position >= musicOffset) {
+        //        const pos = position - musicOffset;      // Relative position to the song.
+        //        const beat = player.findBeat(pos);
+        //        if (b !== beat) {           // if b change
+        //            if (beat) {
+        //                const beatIndex = beat.index + (pos - beat.startTime) / beat.duration   // add remaining position to beat pos
+        //                if (refs.current.repeat && refs.current.beatLeftPos !== refs.current.beatRightPos && (
+        //                    beatIndex > refs.current.beatRightPos || beatIndex < refs.current.beatLeftPos
+        //                )) {         // If set range and current position is higher than the loop (at right), return to start of the loop
+        //                    player.requestMediaSeek(refs.current.leftTime);
+        //                }
+        //                else {
+        //                    //console.log("Beat index: ", beat.index);
+        //                    //console.log("Music time position:", position, "ms");
+        //                    //console.log("Relative position from song:", pos, "ms");
+        //                    setTimePos(pos);
+        //                    setBeatPos(beatIndex);                     // Update beat here
+        //                }
+        //            }
+        //            b = beat;
+        //        }
+        //    }
+        //    else {          // Not update when position if in the first delay before song.
+        //        setTimePos(0);
+        //        setBeatPos(0);
+        //    }
+        //},
+        //onThrottledTimeUpdate: (position: number) => {  // position: Music time position
 
         //},
-        onTimeUpdate: (position: number) => {  // position: Music time position
-            //console.log("repeat: ", refs.current.repeat);
-            if (position > 232000) {            // end of song, not to overflow
-                player.requestStop();
-            }
-
-            const beat = player.findBeat(position);
-            if (b !== beat) {           // if b change
-                if (beat) {
-                    const beatIndex = beat.index + (position - beat.startTime) / (beat.endTime - beat.startTime)   // add remaining position to beat pos
-                    if (refs.current.repeat && refs.current.beatLeftPos !== refs.current.beatRightPos && (
-                        beatIndex > refs.current.beatRightPos || beatIndex < refs.current.beatLeftPos
-                    )) {         // If set range and current position is higher than the loop (at right), return to start of the loop
-                        player.requestMediaSeek(refs.current.leftTime);
-                    }
-                    else {
-                        console.log("Beat index: ", beat.index);
-                        console.log("Music time position:", position, "ms");
-                        setTimePos(position);
-                        setBeatPos(beatIndex);                     // Update beat here
-                    }
-                }
-                b = beat;
-            }
-        },
         //onVideoReady: (v) => {
         //    if (v.firstChar) {   // If have lyrics
 
@@ -149,6 +182,9 @@ const TextAlive: React.FC<TextAliveProps> = ({ player, timePos, setTimePos, beat
                 const overlay = document.getElementById("overlay")
                 if (overlay)
                     overlay.style.display = 'none'; // Loaded
+                player.requestMediaSeek(musicOffset);
+                setMasterVolume(0);
+                refs.current.masterVolume = 0;
             }
             else {
                 console.log("Stop excessing play");

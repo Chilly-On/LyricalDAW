@@ -1,4 +1,4 @@
-﻿import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Player } from "textalive-app-api";
 import Track_gen from "./track-gen";
 import Track_grid from "./track-grid";
@@ -67,7 +67,7 @@ const Track: React.FC<TrackProps> = ({ musicOffset, player, isPlaying, timePos, 
     const initialTimeWidth = 30;
     const [timeWidth] = useState(initialTimeWidth);
 
-    const [trackVolume, setTrackVolume] = useState(Array(125).fill(0));      // create 30 array of track volume
+    const [trackVolume, setTrackVolume] = useState(Array(135).fill(0));      // create 30 array of track volume
 
     let trackNo = -1;               // For add trackNo++ to become 0
     let trackID = 1;               // To automatically assign ID
@@ -114,7 +114,7 @@ const Track: React.FC<TrackProps> = ({ musicOffset, player, isPlaying, timePos, 
 
         const targetScrollX = beatPos * timeWidth - (container.clientWidth - 300) / 2;  // Subtract the width of track headers
 
-        console.log("targetScrollX: ", targetScrollX);
+        // console.log("targetScrollX: ", targetScrollX);
 
         // Smooth scroll to center the pointer
         container.scrollTo({

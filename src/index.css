@@ -274,7 +274,7 @@ main {
 .illust {
     position: absolute;
     height: 60%;
-    max-height: 250px;
+    max-height: 300px;
     bottom: 50px;
     right: 320px;
     pointer-events: none;

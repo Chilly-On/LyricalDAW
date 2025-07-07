@@ -68,8 +68,8 @@ const Master_volume: React.FC<TrackRightProps> = ({ refs }) => {
                         position: "absolute",
                         bottom: 0,
                         width: "50px",
-                        height: `${refs.current.masterVolume * 100}%`,         // Display progress.
-                        backgroundColor: "#99f4e9",
+                        height: `${refs.current.isPlaying ? refs.current.masterVolume * 100 : 0}%`,         // Display progress.
+                        backgroundColor: refs.current.isPlaying ? "#99f4e9" : "inherit",
                         borderWidth: "0px",
                         padding: "20px",
 
@@ -91,8 +91,8 @@ const Master_volume: React.FC<TrackRightProps> = ({ refs }) => {
                         position: "absolute",
                         bottom: 0,
                         width: "50px",
-                        height: `${refs.current.masterVolume * 100}%`,         // Display progress.
-                        backgroundColor: "#99f4e9",
+                        height: `${refs.current.isPlaying ? refs.current.masterVolume * 100 : 0}%`,         // Display progress.
+                        backgroundColor: refs.current.isPlaying ? "#99f4e9" : "inherit",
                         borderWidth: "0px",
                         padding: "20px",
 

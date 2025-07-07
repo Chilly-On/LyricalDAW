@@ -87,7 +87,7 @@ const TextAlive: React.FC<TextAliveProps> = ({ musicOffset, player, timePos, set
             //console.log("Seek pos: ", position);
             //console.log("Music timeline moved to:", position, "ms");
             if (position > 232000) {            // end of song, not to overflow
-                player.requestStop();
+                player.requestPause();
                 refs.current.isPlaying = false;
             }
             if (position >= musicOffset) {

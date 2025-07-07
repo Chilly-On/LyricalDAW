@@ -263,7 +263,15 @@ function loadText(player) {
 }
 
 function App() {
-    const player = new Player({ app: { token: "test" } });
+    // Initialize TextAlive Player
+    // Inital at beginning to make sure 1 player are in the project
+    const player = new Player({
+        app: { token: "qzuKA90J9NSxH5mv" },/* Code: qzuKA90J9NSxH5mv,  test*/
+        //throttleInterval: 100,          // delay loading
+        vocalAmplitudeEnabled: true     // load song master volume
+    });  // use to avoid spam, change token later
+    const musicOffset = 800; // Offset from first beat
+  
     loadText(player);
 
     return (

@@ -206,7 +206,9 @@ const Footer: React.FC<FooterProps> = ({ musicOffset, player, isPlaying, setIsPl
                 </div>
 
 
-                <img id="popup"
+                <img
+                    className="popup"
+                    id="popup"
                     onClick={handlePopup}
                     src="instructPopup.png"
                     alt="Play Button"

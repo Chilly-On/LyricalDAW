@@ -1,5 +1,23 @@
-# Install the project development environment
-Run these command in terminal:
+﻿# LyricalDAW
+### 説明文
+このWebアプリは音楽を作るシミュレーションを表します。みんなが聞いている音楽家をお礼としてこの作品を作りました。
+
+曲を作る努力を表示するために、「曲を作り方」という動画を作って、インターネットを投稿しました。でも、ほとんどの視聴者はその動画を見ません。それで、このWebアプリが生産しました。
+
+派手に流れるトラックを見て、パラメーター表示画面を見て、コントロールボタンを試して、多くのダイナミックな音量メーターが見ることができます。音楽家やDJになったような経験を受けられます。
+
+しかし、曲を楽しむことだけではありません。生成できるAIが進歩していくにつれて、このWebアプリは人間によって素晴らしい芸術が作られる証拠です。ですから、手でクリエイティブになることがいつでも忘れないようにした方がいいです。
+ぜひ、たくさんの人と楽しんでいただければ幸いです。
+
+### 適用する機種
+- PC
+- スマートフォン
+- タブレット
+
+# プロジェクトのインストールする方法
+
+### パッケージをインストールする
+ターミナルでこのコマンドを実行します:
 
 ```
 npm install react-bootstrap bootstrap
@@ -7,62 +25,13 @@ npm install -D postcss postcss-cli
 npx tailwindcss init -p
 ```
 
+### プロジェクトをビルドする
+ターミナルでこのコマンドを実行します:
 ```
 npm run build
-npm run preview
 ```
 
-# React + TypeScript + Vite
+デプロイメント用のビルド プロジェクトを取得するには、ファイルの　'dist'　を見つけます。
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+# 使い方
+画面の下に位置するフッターで、‘?’　ボタンをクリックすると、使い方が出ます。

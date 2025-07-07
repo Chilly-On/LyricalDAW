@@ -102,7 +102,7 @@ const DAW: React.FC<DAWProps> = ({ player, musicOffset }) => {
                     fontSize: "72px",
                     color: "white",
                     pointerEvents: "none",           // click though
-                    zIndex: "2"
+                    zIndex: "4"
                 }}>
             </div>
             <div className="justify-content-center align-items-center"

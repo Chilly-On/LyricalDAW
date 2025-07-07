@@ -73,11 +73,6 @@ function loadText(player) {
             p5.clear();
             if (position < 500) return;
             
-            // Add subtle background effect
-            p5.noStroke();
-            p5.fill(0, 0, 0, 5);
-            p5.rect(0, 0, p5.width, p5.height);
-            
             const char = player.video.findChar(position, { loose: true });
             
             // Create new line on first word
@@ -133,7 +128,7 @@ function loadText(player) {
             
             // Calculate vertical positions
             const totalLines = activeLines.length + (currentLine.length > 0 ? 1 : 0);
-            const startY = p5.height / 2 - (totalLines - 1) * lineHeight / 2;
+            const startY = p5.height * 0.35 - (totalLines - 1) * lineHeight / 2;
             
             calculateLineLayout(p5, activeLines, currentLine, position);
             

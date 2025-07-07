@@ -440,14 +440,14 @@ const fileTracks: TrackFile[] = [   // borderTop: 1
     },
     {
         type: "sample",
-        name: "MO_SHINJU_140_synth_",
+        name: "MO_SHINJU_140_synth_in 2",
         icon: "Track/sample.png",
         color: p,
 
     },
     {
         type: "sample",
-        name: "MO_SHINJU_140_synth_",
+        name: "MO_SHINJU_140_synth_in 3",
         icon: "Track/sample.png",
         color: p,
     },

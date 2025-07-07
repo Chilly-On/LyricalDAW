@@ -40,7 +40,7 @@ interface FooterProps {       // for input parameters
 }
 
 
-const Footer: React.FC<FooterProps> = ({ musicOffset, player, isPlaying, setIsPlaying, timePos, beatPos, beatLeftPos, beatRightPos, repeat, refs }) => {
+const Footer: React.FC<FooterProps> = ({ musicOffset, player, isPlaying, setIsPlaying, timePos, beatPos, beatLeftPos, beatRightPos, repeat, setRepeat, refs }) => {
     const handleToStart = () => {
         refs.current.timePos = 0;
         refs.current.beatPos = 0;
@@ -101,8 +101,21 @@ const Footer: React.FC<FooterProps> = ({ musicOffset, player, isPlaying, setIsPl
         console.log("Music pause");
     }
     const handleRepeat = () => {
-        if (refs.current.repeat) refs.current.repeat = false; else refs.current.repeat = true; // Toggle the state
+        setRepeat((prev: boolean) => !prev);     // Toggle the state
         console.log("Repeat toggled:", !refs.current.repeat);
+        player.volume = 0;  // Mute to wait for reloading
+        if (player.mediaPosition > musicOffset)
+            player.requestMediaSeek(player.mediaPosition - 10); // Subtract the time for reloading
+        else 
+            player.requestMediaSeek(player.mediaPosition); // Subtract the time for reloading
+        if (!refs.current.isPlaying) {              // Force to reset
+            player.volume = 0;
+            player.requestPlay();
+            setTimeout(() => {
+                player.requestPause();
+                player.volume = 100;    // Return volume to normal
+            }, 10);
+        }
     };
     const handlePopup = () => {             // Click popup to hide
         const popup = document.getElementById("popup");
@@ -153,13 +166,9 @@ const Footer: React.FC<FooterProps> = ({ musicOffset, player, isPlaying, setIsPl
             <Track_left refs={refs} />
             <Track_right refs={refs} />
            
-            <div
+            <div className="d-flex flex-row align-items-center justift-content-center"
                 style={{
-                    display: "flex",
                     position: "relative",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center"
                 }}
             >
                 <div
@@ -168,7 +177,7 @@ const Footer: React.FC<FooterProps> = ({ musicOffset, player, isPlaying, setIsPl
                         flexDirection: "row",
                         alignItems: "center",
                         justifyContent: "center",
-                        marginRight: "10px",
+                        marginRight: "5px",
                         gap: "0px", // ensure no spacing
                     }}
                 >
@@ -181,31 +190,19 @@ const Footer: React.FC<FooterProps> = ({ musicOffset, player, isPlaying, setIsPl
                     <Play refs={refs} onPlay={ handlePlay } />
                     <Record />
                 </div>
-                <div style={{
-                    position: "relative",
-                    marginLeft: "10px"
-                }}
-                >
-                    <button className="d-flex flex-row align-items-center text-center justify-content-between"
-                        onClick={handleInstruct}
-                        style={{
-                            width: "30px",
-                            height: "24px",
-                            position: "absolute",
-                            top: "50%",
-                            left: "50%",
-                            transform: "translate(-50%, -50%)",
-                            backgroundColor: "#5FC3C7",
-                            borderWidth: "0px",
-                            paddingLeft: "10px",
-                            fontSize: "20px",
-                            color: "white"
-                        }}>
-                        ?
-                    </button>
-                </div>
-
-
+                <button className="d-flex flex-row align-items-center text-center justify-content-between"
+                    onClick={handleInstruct}
+                    style={{
+                        width: "30px",
+                        height: "24px",
+                        backgroundColor: "#5FC3C7",
+                        borderWidth: "0px",
+                        paddingLeft: "10px",
+                        fontSize: "20px",
+                        color: "white"
+                    }}>
+                    ?
+                </button>
                 <img
                     className="popup"
                     id="popup"

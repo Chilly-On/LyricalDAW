@@ -56,11 +56,12 @@ interface TrackProps {       // for input parameters
     setBeatRightPos: (n: number) => void,
     leftTime: number,
     setLeftTime: (n: number) => void,
-    refs: React.RefObject<PlayerRefs>;
+    refs: React.RefObject<PlayerRefs>,
+    processedWords: Set<string>
 }
 
 
-const Track: React.FC<TrackProps> = ({ musicOffset, player, isPlaying, timePos, setTimePos, beatPos, setBeatPos, beatLeftPos, setBeatLeftPos, beatRightPos, setBeatRightPos, leftTime, setLeftTime, refs }) => {
+const Track: React.FC<TrackProps> = ({ musicOffset, player, isPlaying, timePos, setTimePos, beatPos, setBeatPos, beatLeftPos, setBeatLeftPos, beatRightPos, setBeatRightPos, leftTime, setLeftTime, refs, processedWords }) => {
     // Initialize track grid length here
     //const timeSteps = player.data.song.length * 4;          // change 4/4 or 3/4 here
     const timeSteps = 125 * 4 + 2;          // change 4/4 or 3/4 here; grid is quarterBeat
@@ -147,6 +148,7 @@ const Track: React.FC<TrackProps> = ({ musicOffset, player, isPlaying, timePos, 
         <div className="d-flex flex-row"
             ref={scrollRef}
             style={{
+                position: "relative",
                 backgroundColor: "#2DA399",
                 border: "2.5px solid #f9f9fa",
                 borderRadius: "10px",
@@ -356,6 +358,7 @@ const Track: React.FC<TrackProps> = ({ musicOffset, player, isPlaying, timePos, 
                     beatRightPos={beatRightPos} setBeatRightPos={setBeatRightPos}
                     leftTime={leftTime} setLeftTime={setLeftTime}
                     refs={refs}
+                    processedWords={processedWords}
                 />
                 {/* Timeline pointer*/}
                 {/* Can hide this in deploy, as well as the scroll is correct (pointer should be on screen) */}

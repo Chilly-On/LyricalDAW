@@ -28,7 +28,8 @@ type TimelineGridProps = {
     setBeatRightPos: (n: number) => void,
     leftTime: number,
     setLeftTime: (n: number) => void,
-    refs: React.RefObject<PlayerRefs>;
+    refs: React.RefObject<PlayerRefs>,
+    processedWords: Set<string>
 };
 
 const Track_grid: React.FC<TimelineGridProps> = ({
@@ -42,7 +43,8 @@ const Track_grid: React.FC<TimelineGridProps> = ({
     beatPos,
     beatLeftPos, setBeatLeftPos, beatRightPos, setBeatRightPos,
     leftTime, setLeftTime,       // Store absolute time of left area to seek later
-    refs
+    refs,
+    processedWords
 }) => {
 
     //const containerRef = useRef<HTMLDivElement>(null);
@@ -75,6 +77,7 @@ const Track_grid: React.FC<TimelineGridProps> = ({
         refs.current.beatRightPos = beatIndex;
         refs.current.leftTime = pos;
         setIsDragging(true);
+        processedWords.clear(); // Empty text filter when seeking
     };
 
     const handleMouseUp = () => {

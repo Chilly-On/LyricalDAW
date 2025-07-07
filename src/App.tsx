@@ -1,29 +1,41 @@
-﻿import React from 'react';
-import DAW from './DAW/DAW';
+﻿import DAW from './DAW/DAW';
 import './index.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { Player, Ease } from "textalive-app-api";
 import P5 from 'p5';
+interface Word {
+    text: string;
+    startTime: number;
+    endTime: number;
+    baseSize: number;
+    x: number;
+    width: number;
+    id: string;
+    shadowAlpha?: number;
+    scale?: number;
+    isExpanding?: boolean;
+    pulse?: number;
+}
 
-function loadText(player) {
+type Line = Word[];
+function loadText(player: Player, processedWords: Set<string>) {
     new P5((p5) => {
         // Initialize with default values that will be updated in setup
-        let baseFontSize;
-        let maxFontSize;
-        let lineHeight;
-        let spacing;
-        
-        const processedWords = new Set();
-        let currentLine = [];
-        let activeLines = [];
+        let baseFontSize: number;
+        let maxFontSize: number;
+        let lineHeight: number;
+        let spacing: number;
+
+        let currentLine: Line = [];
+        let activeLines: Line[] = [];
         let lastWordEndTime = 0;
 
         // Function to check if a word should be excluded
-        const shouldExcludeWord = (text) => {
+        const shouldExcludeWord = (text: string) => {
             // Define patterns to exclude
             const excludePatterns = [
-                /^[\(\)\[\]\{\}]+$/, // Parentheses, brackets, braces
+        //        /^[\(\)\[\]\{\}]+$/, // Parentheses, brackets, braces
                 /^[!@#$%^&*_+\-=\\|;:'",.<>?]+$/, // Common symbols
                 /^[\u3000-\u303F]+$/, // Japanese punctuation and symbols
                 /^[\uFF00-\uFFEF]+$/ // Halfwidth and Fullwidth Forms
@@ -74,11 +86,6 @@ function loadText(player) {
             p5.clear();
             if (position < 500) return;
             
-            // Add subtle background effect
-            p5.noStroke();
-            p5.fill(0, 0, 0, 5);
-            p5.rect(0, 0, p5.width, p5.height);
-            
             const char = player.video.findChar(position, { loose: true });
             
             // Create new line on first word
@@ -91,14 +98,19 @@ function loadText(player) {
 
             // Process current character
             if (char) {
+                //console.log("processedWords: ", processedWords);
+
                 const word = char.parent;
-                const wordId = `${word.startTime}-${word.text}`; 
-                
-                const isNewWord = currentLine.length === 0 || 
-                                word.startTime > currentLine[currentLine.length-1].endTime + 50;
+                const wordId = `${word.startTime}-${word.text}`;
+
+                //const isNewWord = currentLine.length === 0 || word.startTime > currentLine[currentLine.length - 1].endTime + 50;
+                const wordInTime = player.videoPosition > word.startTime - 160 && player.videoPosition < word.startTime + 160;
                 
                 // Only process if it's not an excluded word
-                if (isNewWord && !processedWords.has(wordId) && !shouldExcludeWord(word.text)) {
+                console.log("wordInTime for char ", char.text, ": ", wordInTime)
+                console.log("!processedWords for char ", char.text, ": ", !processedWords.has(wordId))
+
+                if (wordInTime && !processedWords.has(wordId) && !shouldExcludeWord(word.text)) {
                     processedWords.add(wordId);
                     
                     const newWord = {
@@ -116,7 +128,7 @@ function loadText(player) {
                         const lastActiveLine = activeLines[activeLines.length - 1];
                         lastActiveLine.push(newWord);
                         lastWordEndTime = word.endTime;
-                        calculateLineLayout(p5, activeLines, currentLine, position);
+                        calculateLineLayout(p5, activeLines, currentLine);
                     } else {
                         currentLine.push(newWord);
                         lastWordEndTime = word.endTime;
@@ -136,7 +148,7 @@ function loadText(player) {
             const totalLines = activeLines.length + (currentLine.length > 0 ? 1 : 0);
             const startY = p5.height / 2 - (totalLines - 1) * lineHeight / 2;
             
-            calculateLineLayout(p5, activeLines, currentLine, position);
+            calculateLineLayout(p5, activeLines, currentLine);
             
             // Render active lines
             activeLines.forEach((line, i) => {
@@ -189,7 +201,7 @@ function loadText(player) {
             }
         };
         
-        function calculateLineLayout(p5, activeLines, currentLine, position) {
+        function calculateLineLayout(p5: P5, activeLines: Line[], currentLine: Line) {
             const allLines = [...activeLines, currentLine];
             
             allLines.forEach(line => {
@@ -219,7 +231,7 @@ function loadText(player) {
             });
         }
 
-        function renderWord(p5, word, position, yPos, isCompleted, scale, lineOpacity) {
+        function renderWord(p5: P5, word: Word, position: number, yPos: number, isCompleted: boolean, scale: number, lineOpacity: number) {
             let fontSize = word.baseSize * scale;
             let opacity = 100;
             let yOffset = word.pulse || 0;
@@ -252,7 +264,7 @@ function loadText(player) {
             p5.text(word.text, word.x, yPos + yOffset);
         }
 
-        function renderLine(p5, line, position, yPos, isCompleted, scale, lineOpacity) {
+        function renderLine(p5: P5, line: Line, position: number, yPos: number, isCompleted: boolean, scale: number, lineOpacity: number) {
             line.forEach(word => {
                 if (position >= word.startTime - 500) {
                     renderWord(p5, word, position, yPos, isCompleted, scale, lineOpacity);
@@ -262,13 +274,24 @@ function loadText(player) {
     });
 }
 
+
+
 function App() {
-    const player = new Player({ app: { token: "test" } });
-    loadText(player);
+    // Initialize TextAlive Player
+    // Inital at beginning to make sure 1 player are in the project
+    const player = new Player({
+        app: { token: "qzuKA90J9NSxH5mv" },/* Code: qzuKA90J9NSxH5mv,  test*/
+        throttleInterval: 200,          // delay loading
+        vocalAmplitudeEnabled: true     // load song master volume
+    });  // use to avoid spam, change token later
+    const musicOffset = 800; // Offset from first beat
+
+    const processedWords = new Set<string>();
+    loadText(player, processedWords);
 
     return (
         <div className="flex flex-col">
-            <DAW player={player} musicOffset={musicOffset} />
+            <DAW player={player} musicOffset={musicOffset} processedWords={processedWords} />
         </div>
     );
 }

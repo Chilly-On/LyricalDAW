@@ -113,6 +113,9 @@ const DAW: React.FC<DAWProps> = ({ player, musicOffset, processedWords }) => {
                 <img
                     src="logo.png"
                     alt="Logo layer"
+                    style={{
+                        width: "600px"
+                    }}
                 >
                 </img>
             </div>

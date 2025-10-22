@@ -105,10 +105,6 @@ function loadText(player: Player, processedWords: Set<string>) {
 
                 //const isNewWord = currentLine.length === 0 || word.startTime > currentLine[currentLine.length - 1].endTime + 50;
                 const wordInTime = player.videoPosition > word.startTime - 160 && player.videoPosition < word.startTime + 160;
-                
-                // Only process if it's not an excluded word
-                console.log("wordInTime for char ", char.text, ": ", wordInTime)
-                console.log("!processedWords for char ", char.text, ": ", !processedWords.has(wordId))
 
                 if (wordInTime && !processedWords.has(wordId) && !shouldExcludeWord(word.text)) {
                     processedWords.add(wordId);
